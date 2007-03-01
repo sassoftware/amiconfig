@@ -3,7 +3,8 @@
 #
 
 from urllib import urlopen
-from ec2.lib.errors import *
+
+from ec2lib.errors import *
 
 class InstanceData:
     def __init__(self):
@@ -58,4 +59,3 @@ class InstanceData:
 
     def getSSHKey(self, id=0):
         return self.open('meta-data/public-keys/0/openssh-key').read()
-

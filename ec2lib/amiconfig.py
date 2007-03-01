@@ -5,9 +5,13 @@
 import os
 import sys
 
+from ec2lib.errors import *
+from ec2lib.userdata import UserData
+from ec2lib.instancedata import InstanceData
+
 class AMIConfig:
     def __init__(self):
-        self.id = EC2InstanceData()
+        self.id = InstanceData()
         self.ud = UserData(self.id)
 
     def configure(self):

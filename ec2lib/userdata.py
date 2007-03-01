@@ -4,7 +4,7 @@
 
 from ConfigParser import ConfigParser, RawConfigParser
 
-from ec2.lib.errors import *
+from ec2lib.errors import *
 
 class INIFileStub:
     def __init__(self, contents):
