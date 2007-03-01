@@ -1,0 +1,10 @@
+#!/usr/bin/python
+#
+# Copyright (c) 2007 rPath, Inc.
+#
+
+import sys
+from ec2.amiconfig import AMIConfig
+
+amiConfig = AMIConfig()
+sys.exit(amiConfig.configure())
