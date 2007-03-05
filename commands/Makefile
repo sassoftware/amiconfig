@@ -17,7 +17,9 @@ TOPDIR=..
 sbin_files = \
 	amiconfig
 
-extra_dist = Makefile
+extra_dist = \
+	Makefile \
+	rpathamiconfig
 
 dist_files = $(sbin_files) $(extra_dist)
 

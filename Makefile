@@ -64,7 +64,7 @@ archive:
 	tar cjf $(DISTDIR).tar.bz2 `basename $(DISTDIR)` ; \
 	rm -rf $(DISTDIR)
 
-forcedist: $(dist_files)
+forcedist: $(dist_files) archive
 
 tag:
 	hg tag amiconfig-$(VERSION)
