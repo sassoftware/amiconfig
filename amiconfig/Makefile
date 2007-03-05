@@ -21,7 +21,7 @@ python_files = \
 	constants.py \
 	amiconfig.py \
 	errors.py \
-	instancedatqa.py \
+	instancedata.py \
 	userdata.py
 
 extra_files = \
