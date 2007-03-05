@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007 rPath, Inc.
+# Copyright (c) 2004-2006 rPath, Inc.
 #
 # This program is distributed under the terms of the Common Public License,
 # version 1.0. A copy of this license should have been distributed with this
@@ -11,21 +11,4 @@
 # full details.
 #
 
-TOPDIR = ..
-
-extra_files = Makefile
-
-dist_files = ami.init ami.sysconfig $(extra_files)
-
-all:
-
-install:
-	install -m 755 ami.init $(DESTDIR)$(initdir)/amiconfig
-
-dist : $(dist_files) default-dist
-
-clean : default-clean
-
-include $(TOPDIR)/Make.rules
-
-.PHONY: clean dist install
+version = "@version@"
