@@ -20,6 +20,7 @@ dist_files = ami.init ami.sysconfig $(extra_files)
 all:
 
 install:
+	mkdir -p $(DESTDIR)$(initdir)
 	install -m 755 ami.init $(DESTDIR)$(initdir)/amiconfig
 
 dist : $(dist_files) default-dist
