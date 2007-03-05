@@ -21,6 +21,7 @@ export sysconfdir = /etc
 export initdir = $(sysconfdir)/init.d
 export prefix = /usr
 export bindir = $(prefix)/bin
+export sbindir = $(prefix)/sbin
 export libdir = $(prefix)/lib
 export libexecdir = $(prefix)/libexec
 export datadir = $(prefix)/share
