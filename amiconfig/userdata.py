@@ -7,12 +7,15 @@ from ConfigParser import ConfigParser, RawConfigParser
 from errors import *
 
 class INIFileStub:
-    def __init__(self, contents):
+    def __init__(self, contents, name=None):
         self.__contents = contents.split('\n')
         self.__pos = 0
         self.__sectre = RawConfigParser.SECTCRE
         self.__optre = RawConfigParser.OPTCRE
-        self.name = ':memory:'
+        if name:
+            self.name = name
+        else:
+            self.name = ':memory:'
 
     def sanitize(self):
         list = []
@@ -44,7 +47,7 @@ class UserData(ConfigParser):
             userData = id.getUserData()
         except EC2DataRetrievalError:
             userData = ''
-        self.fd = INIFileStub(userData)
+        self.fd = INIFileStub(userData, name='EC2UserData')
         self.fd.sanitize()
         self.readfp(self.fd)
 
