@@ -11,7 +11,10 @@ class InstanceData:
         self.urlbase = 'http://169.254.169.254/1.0/'
 
     def open(self, path):
-        results = urlopen('%s/%s' % (self.urlbase, path))
+        try:
+            results = urlopen('%s/%s' % (self.urlbase, path))
+        except Exception, e:
+            import epdb; epdb.st()
         if results.headers.gettype() == 'text/html':
             raise EC2DataRetrievalError, '%s' % results.read()
         return results
