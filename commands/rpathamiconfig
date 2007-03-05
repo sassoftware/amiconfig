@@ -14,14 +14,14 @@ class rPathAMIConfig(AMIConfig):
                 return self.ud.getSection(section)
 
     def _configure(self):
-        AMIConfig._configure(self)
-
         # Get the rPath specific config from user data.
         self.rpathcfg = self._getrPathSection()
 
         if self.rpathcfg:
             # Run rPath config actions.
             self.RAPAdminPassword()
+
+        AMIConfig._configure(self)
 
     def RAPAdminPassword(self):
         # Return if raa is not installed or the rap-password was not set in
