@@ -5,9 +5,9 @@
 import os
 import sys
 
-from ec2lib.errors import *
-from ec2lib.userdata import UserData
-from ec2lib.instancedata import InstanceData
+from errors import *
+from userdata import UserData
+from instancedata import InstanceData
 
 class AMIConfig:
     def __init__(self):

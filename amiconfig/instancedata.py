@@ -2,9 +2,10 @@
 # Copyright (c) 2007 rPath, Inc.
 #
 
+import socket
 from urllib import urlopen
 
-from ec2lib.errors import *
+from errors import *
 
 class InstanceData:
     def __init__(self):
@@ -14,34 +15,37 @@ class InstanceData:
         try:
             results = urlopen('%s/%s' % (self.urlbase, path))
         except Exception, e:
-            import epdb; epdb.st()
+            raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
         if results.headers.gettype() == 'text/html':
             raise EC2DataRetrievalError, '%s' % results.read()
         return results
 
+    def read(self, path):
+        return self.open(path).read()
+
     def getUserData(self):
-        return self.open('user-data').read()
+        return self.read('user-data')
 
     def getAMIId(self):
-        return self.open('meta-data/ami-id').read()
+        return self.read('meta-data/ami-id')
 
     def getAMILaunchIndex(self):
-        return self.open('meta-data/ami-launch-index').read()
+        return self.read('meta-data/ami-launch-index')
 
     def getAMIManifestPath(self):
-        return self.open('meta-data/ami-manifest-path').read()
+        return self.read('meta-data/ami-manifest-path')
 
     def getHostname(self):
-        return self.open('meta-data/hostname').read()
+        return self.read('meta-data/hostname')
 
     def getInstanceId(self):
-        return self.open('meta-data/instance-id').read()
+        return self.read('meta-data/instance-id')
 
     def getLocalIPv4(self):
-        return self.open('meta-data/local-ipv4').read()
+        return self.read('meta-data/local-ipv4')
 
     def getReservationId(self):
-        return self.open('meta-data/reservation-id').read()
+        return self.read('meta-data/reservation-id')
 
     def getSecurityGroups(self):
         list = []
@@ -61,4 +65,4 @@ class InstanceData:
         return list
 
     def getSSHKey(self, id=0):
-        return self.open('meta-data/public-keys/0/openssh-key').read()
+        return self.read('meta-data/public-keys/0/openssh-key')

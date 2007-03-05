@@ -4,7 +4,7 @@
 
 from ConfigParser import ConfigParser, RawConfigParser
 
-from ec2lib.errors import *
+from errors import *
 
 class INIFileStub:
     def __init__(self, contents):
@@ -36,7 +36,11 @@ class INIFileStub:
 class UserData(ConfigParser):
     def __init__(self, id):
         ConfigParser.__init__(self)
-        self.fd = INIFileStub(id.getUserData())
+        try:
+            userData = id.getUserData()
+        except EC2DataRetrievalError:
+            userData = ''
+        self.fd = INIFileStub(userData)
         self.fd.sanitize()
         self.readfp(self.fd)
 
