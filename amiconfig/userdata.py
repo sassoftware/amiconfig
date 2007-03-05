@@ -16,8 +16,12 @@ class INIFileStub:
 
     def sanitize(self):
         list = []
+        foundSection = False
         for line in self.__contents:
-            if self.__sectre.match(line) or self.__optre.match(line):
+            if self.__sectre.match(line):
+                foundSection = True
+                line.append(line)
+            if foundSection and self.__optre.match(line):
                 list.append(line)
         self.__contents = list
 
