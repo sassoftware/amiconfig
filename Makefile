@@ -16,7 +16,7 @@ all: subdirs
 
 export VERSION = 0.1.0
 export TOPDIR = $(shell pwd)
-export DISTDIR = $(TOPDIR)/pyec2-$(VERSION)
+export DISTDIR = $(TOPDIR)/amiconfig-$(VERSION)
 export prefix = /usr
 export bindir = $(prefix)/bin
 export libdir = $(prefix)/lib
@@ -24,11 +24,11 @@ export libexecdir = $(prefix)/libexec
 export datadir = $(prefix)/share
 export mandir = $(datadir)/man
 export sitedir = $(libdir)/python$(PYVERSION)/site-packages/
-export pyec2dir = $(sitedir)/ec2
-export pyec2libdir = $(libdir)/pyec2
-export pyec2libexecdir = $(libexecdir)/pyec2
+export amiconfigdir = $(sitedir)/amiconfig
+export amiconfiglibdir = $(libdir)/amiconfig
+export amiconfiglibexecdir = $(libexecdir)/amiconfig
 
-SUBDIRS = commands ec2 config man scripts extra
+SUBDIRS = commands amiconfig extra
 
 extra_files = \
 	LICENSE			\
@@ -65,18 +65,18 @@ archive:
 forcedist: $(dist_files)
 
 tag:
-	hg tag pyec2-$(VERSION)
+	hg tag amiconfig-$(VERSION)
 
 clean: clean-subdirs default-clean
 
 ccs: dist
-	cvc co --dir pyec2-$(VERSION) pyec2=conary.rpath.com@rpl:devel
+	cvc co --dir amiconfig-$(VERSION) amiconfig=conary.rpath.com@rpl:devel
 	sed -i 's,version = ".*",version = "$(VERSION)",' \
-                                        pyec2-$(VERSION)/pyec2.recipe;
-	sed -i 's,r.addArchive.*,r.addArchive("pyec2-$(VERSION).tar.bz2"),' \
-                                        pyec2-$(VERSION)/pyec2.recipe;
-	cp pyec2-$(VERSION).tar.bz2 pyec2-$(VERSION)
-	bin/cvc cook pyec2-$(VERSION)/pyec2.recipe
-	rm -rf pyec2-$(VERSION)
+                                        amiconfig-$(VERSION)/amiconfig.recipe;
+	sed -i 's,r.addArchive.*,r.addArchive("amiconfig-$(VERSION).tar.bz2"),' \
+                                        amiconfig-$(VERSION)/amiconfig.recipe;
+	cp amiconfig-$(VERSION).tar.bz2 amiconfig-$(VERSION)
+	bin/cvc cook amiconfig-$(VERSION)/amiconfig.recipe
+	rm -rf amiconfig-$(VERSION)
 
 include Make.rules
