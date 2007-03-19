@@ -1,2 +1,5 @@
+Changes in 0.1.1:
+  o AMIConfig no longer tracebacks when a ssh key is not specified.
+
 Changes in 0.1.0:
   o Initial version.
