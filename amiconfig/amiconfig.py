@@ -30,6 +30,12 @@ class AMIConfig:
         self.rootSSHKeys()
 
     def rootSSHKeys(self):
+        try:
+            key = self.id.getSSHKey()
+        except EC2DataRetrievalError:
+            # no key available
+            return
+
         sshkeydir = '/root/.ssh/'
         sshdirperms = 0700
         # make ssh directory if it doesn't exist
@@ -37,7 +43,6 @@ class AMIConfig:
             os.mkdir(sshkeydir)
             os.chmod(sshkeydir, sshdirperms)
 
-        key = self.id.getSSHKey()
 
         # ensure that key is not already in the authorized_keys file
         authkeysfile = '%s/authorized_keys' % sshkeydir
