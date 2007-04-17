@@ -4,6 +4,7 @@
 
 import os
 import sys
+from imputil import imp
 
 from amiconfig.errors import *
 from amiconfig.constants import *
