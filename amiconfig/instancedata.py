@@ -5,7 +5,7 @@
 import socket
 from urllib import urlopen
 
-from errors import *
+from amiconfig.errors import *
 
 class InstanceData:
     def __init__(self):

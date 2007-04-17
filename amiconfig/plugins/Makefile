@@ -12,21 +12,16 @@
 # full details.
 #
 
-all: subdirs constants.py
+all: subdirs
 
-SUBDIRS=plugins
+SUBDIRS=
 
 python_files = \
-	__init__.py	\
-	constants.py \
-	amiconfig.py \
-	errors.py \
-	instancedata.py \
-	userdata.py
+	rootsshkeys.py \
+	rapadminpassword.py
 
 extra_files = \
-	Makefile \
-	constants.py.in
+	Makefile
 
 dist_files = $(python_files) $(extra_files)
 
@@ -46,6 +41,5 @@ install: all install-subdirs pyfiles-install
 dist: default-dist
 
 clean: clean-subdirs default-clean
-	rm -f constants.py
 
 include ../Make.rules

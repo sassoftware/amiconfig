@@ -19,7 +19,6 @@ sbin_files = \
 
 extra_dist = \
 	Makefile \
-	rpathamiconfig
 
 dist_files = $(sbin_files) $(extra_dist)
 

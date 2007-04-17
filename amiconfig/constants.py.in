@@ -12,3 +12,6 @@
 #
 
 version = "@version@"
+
+PLUGIN_PATH = ['/usr/lib/python2.4/site-packages/amiconfig/plugins',
+               '/usr/lib/amiconfig/plugins']

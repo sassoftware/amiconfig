@@ -4,7 +4,7 @@
 
 from ConfigParser import ConfigParser, RawConfigParser
 
-from errors import *
+from amiconfig.errors import *
 
 class INIFileStub:
     def __init__(self, contents, name=None):

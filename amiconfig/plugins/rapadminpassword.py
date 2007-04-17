@@ -1,19 +1,21 @@
-#!/usr/bin/python
 #
 # Copyright (c) 2007 rPath, Inc.
 #
 
 import os
 import sys
-from amiconfig import AMIConfig
+from amiconfig.errors import *
+from amiconfig.amiconfig import AMIPlugin
 
-class rPathAMIConfig(AMIConfig):
+class AMIConfigPlugin(AMIPlugin):
+    name = 'rapadminpassword'
+
     def _getrPathSection(self):
         for section in self.ud.sections():
             if section.lower() == 'rpath':
                 return self.ud.getSection(section)
 
-    def _configure(self):
+    def configure(self):
         # Get the rPath specific config from user data.
         self.rpathcfg = self._getrPathSection()
 
@@ -21,12 +23,10 @@ class rPathAMIConfig(AMIConfig):
             # Run rPath config actions.
             self.RAPAdminPassword()
 
-        AMIConfig._configure(self)
-
     def RAPAdminPassword(self):
         # Return if raa is not installed or the rap-password was not set in
         # the user data.
-        if not (os.path.exists('/etc/raa/prod.cfg') 
+        if not (os.path.exists('/etc/raa/prod.cfg')
                 and self.rpathcfg.has_key('rap-password')):
             return
 
@@ -42,7 +42,3 @@ class rPathAMIConfig(AMIConfig):
         fh = open('/etc/raa/prod.cfg', 'w')
         fh.write(''.join(cfg))
         fh.close()
-
-if __name__ == '__main__':
-    amiConfig = rPathAMIConfig()
-    sys.exit(amiConfig.configure())
