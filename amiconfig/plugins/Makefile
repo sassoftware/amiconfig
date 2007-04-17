@@ -42,4 +42,4 @@ dist: default-dist
 
 clean: clean-subdirs default-clean
 
-include ../Make.rules
+include ../../Make.rules
