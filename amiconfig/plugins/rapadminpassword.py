@@ -5,7 +5,7 @@
 import os
 import sys
 from amiconfig.errors import *
-from amiconfig.amiconfig import AMIPlugin
+from amiconfig.ami import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):
     name = 'rapadminpassword'

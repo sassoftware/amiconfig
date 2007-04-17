@@ -54,6 +54,9 @@ class AMIConfig(object):
 
     def _loadPlugins(self):
         for dir in PLUGIN_PATH:
+            if not os.path.isdir(dir):
+                continue
+            sys.path.append(dir)
             for plugin in os.listdir(dir):
                 klass = self._loadOnePlugin(plugin)
                 if klass and klass.name.lower() not in self.plugins:
@@ -90,7 +93,7 @@ class AMIConfig(object):
         list = DEFAULT_PLUGINS
         config = self.ud.getSection('amiconfig')
         if config and config.has_key('plugins'):
-            for plugin in config['plugins']:
+            for plugin in config['plugins'].split():
                 list.append(plugin.lower())
         return list
 
