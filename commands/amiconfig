@@ -4,7 +4,7 @@
 #
 
 import sys
-from amiconfig import AMIConfig
+from amiconfig.amiconfig import AMIConfig
 
 amiConfig = AMIConfig()
 sys.exit(amiConfig.configure())
