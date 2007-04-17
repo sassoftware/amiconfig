@@ -52,6 +52,10 @@ class UserData(ConfigParser):
         self.readfp(self.fd)
 
     # Returns a section as a dict.
-    def getSection(self, name):
-        if name in self._sections:
+    def getSection(self, name, lower=True):
+        if lower:
+            for section in self.sections():
+                if name.lower() == section.lower():
+                    return self._sections[name]
+        elif name in self._sections:
             return self._sections[name]

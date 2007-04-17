@@ -15,3 +15,7 @@ version = "@version@"
 
 PLUGIN_PATH = ['/usr/lib/python2.4/site-packages/amiconfig/plugins',
                '/usr/lib/amiconfig/plugins']
+
+# List of plugins to always load and run. You can't turn these off, be carefull
+# about adding more.
+DEFAULT_PLUGINS = ['rootsshkeys']

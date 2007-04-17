@@ -10,14 +10,9 @@ from amiconfig.amiconfig import AMIPlugin
 class AMIConfigPlugin(AMIPlugin):
     name = 'rapadminpassword'
 
-    def _getrPathSection(self):
-        for section in self.ud.sections():
-            if section.lower() == 'rpath':
-                return self.ud.getSection(section)
-
     def configure(self):
         # Get the rPath specific config from user data.
-        self.rpathcfg = self._getrPathSection()
+        self.rpathcfg = self.ud.getSection('rpath')
 
         if self.rpathcfg:
             # Run rPath config actions.

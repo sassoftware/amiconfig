@@ -20,37 +20,44 @@ class AMIConfig(object):
     def configure(self):
         results = self._configure()
 
-        if not [ x for x in results.itervalues() if x[1] != '' ]:
-            return 0
-
-        for name, result in results.iteritems():
-            if result == 1:
+        rc = 0
+        for name, (code, result) in results.iteritems():
+            if code == 1:
                 print >>sys.stderr, ('An error occured while atempting to '
-                                     'retrieve EC2 AMI instance data:\n%s' % e)
-            elif result == 2:
-                print >>sys.stderr, ('An unknown exception occured:\n%s' % e)
-            return 1
+                                     'retrieve EC2 AMI instance data:\n%s' % result)
+                rc = 1
+            elif code == 2:
+                print >>sys.stderr, ('An unknown exception occured:\n%s' % result)
+                rc = 1
+            elif code == 3:
+                print >>sys.stderr, ('Plugin disabled by configuration, not '
+                                     'executing: %s' % name)
+        return rc
 
     def _configure(self):
         results = {}
         self._loadPlugins()
+        enabledPlugins = self._getEnabledPlugins()
         for name, plugin in self.plugins.iteritems():
-            try:
-                obj = apply(plugin, (self.id, self.ud))
-                obj.configure()
-                results[name] = (0, '')
-            except EC2DataRetrievalError, e:
-                results[name] = (1, str(e))
-            except Exception, e:
-                results[name] = (2, str(e))
+            if name in enabledPlugins:
+                try:
+                    obj = apply(plugin, (self.id, self.ud))
+                    obj.configure()
+                    results[name] = (0, '')
+                except EC2DataRetrievalError, e:
+                    results[name] = (1, str(e))
+                except Exception, e:
+                    results[name] = (2, str(e))
+            else:
+                results[name] = (3, '')
         return results
 
     def _loadPlugins(self):
         for dir in PLUGIN_PATH:
             for plugin in os.listdir(dir):
                 klass = self._loadOnePlugin(plugin)
-                if klass and klass.name not in self.plugins:
-                    self.plugins[klass.name] = klass
+                if klass and klass.name.lower() not in self.plugins:
+                    self.plugins[klass.name.lower()] = klass
 
     def _loadOnePlugin(self, plugin):
         if plugin.startswith('.'):
@@ -78,6 +85,14 @@ class AMIConfig(object):
             return klass
         except:
             return
+
+    def _getEnabledPlugins(self):
+        list = DEFAULT_PLUGINS
+        config = self.ud.getSection('amiconfig')
+        if config and config.has_key('plugins'):
+            for plugin in config['plugins']:
+                list.append(plugin.lower())
+        return list
 
 
 class AMIPlugin(object):
