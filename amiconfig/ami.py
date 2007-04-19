@@ -96,15 +96,3 @@ class AMIConfig(object):
             for plugin in config['plugins'].split():
                 list.append(plugin.lower())
         return list
-
-
-class AMIPlugin(object):
-    name = None
-
-    def __init__(self, id, ud):
-        self.id = id
-        self.ud = ud
-
-    # Method for plugins to implement.
-    def configure(self):
-        pass
