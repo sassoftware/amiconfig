@@ -18,7 +18,9 @@ SUBDIRS=
 
 python_files = \
 	rootsshkeys.py \
-	rapadminpassword.py
+	rpathplugin.py \
+	rapadminpassword.py \
+	conaryproxy.py \
 
 extra_files = \
 	Makefile
