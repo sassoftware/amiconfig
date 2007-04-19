@@ -37,9 +37,9 @@ generated_files = *.pyo *.pyc
 subdirs: default-subdirs
 
 constants.py: constants.py.in ../Makefile
-	sed s,@version@,$(VERSION),g $< > $@
-	sed s,@amiconfigdir@,$(amiconfigdir),g $< > $@
-	sed s,@libdir@,$(libdir),g $< > $@
+	sed -e s,@version@,$(VERSION),g $< > $@
+	sed -i s,@amiconfigdir@,$(amiconfigdir),g $@
+	sed -i s,@libdir@,$(libdir),g $@
 
 install: all install-subdirs pyfiles-install
 	$(PYTHON) -c "import compileall; compileall.compile_dir('$(DESTDIR)$(amiconfigdir)', ddir='$(amiconfigdir)', quiet=1)"
