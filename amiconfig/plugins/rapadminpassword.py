@@ -5,20 +5,12 @@
 import os
 import sys
 from amiconfig.errors import *
-from amiconfig.ami import AMIPlugin
+from rpathplugin import rPathPlugin
 
-class AMIConfigPlugin(AMIPlugin):
+class AMIConfigPlugin(rPathPlugin):
     name = 'rapadminpassword'
 
-    def configure(self):
-        # Get the rPath specific config from user data.
-        self.rpathcfg = self.ud.getSection('rpath')
-
-        if self.rpathcfg:
-            # Run rPath config actions.
-            self.RAPAdminPassword()
-
-    def RAPAdminPassword(self):
+    def pluginMethod(self):
         # Return if raa is not installed or the rap-password was not set in
         # the user data.
         if not (os.path.exists('/etc/raa/prod.cfg')
