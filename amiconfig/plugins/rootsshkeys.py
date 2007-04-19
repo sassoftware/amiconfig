@@ -4,7 +4,7 @@
 
 import os
 from amiconfig.errors import *
-from amiconfig.ami import AMIPlugin
+from amiconfig.plugin import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):
     name = 'rootsshkeys'
