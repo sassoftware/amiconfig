@@ -20,6 +20,8 @@ python_files = \
 	rootsshkeys.py \
 	rpathplugin.py \
 	rapadminpassword.py \
+	rapcert.py \
+	raprsakey.py \
 	conaryproxy.py \
 
 extra_files = \
