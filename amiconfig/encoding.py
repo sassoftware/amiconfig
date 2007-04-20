@@ -4,8 +4,8 @@
 
 import base64
 
-def encode(self, s):
+def encode(s):
     return base64.encodestring(s).replace('\n', ' ')
 
-def decode(self, s):
+def decode(s):
     return base64.decodestring(s.replace(' ', '\n'))
