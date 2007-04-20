@@ -4,7 +4,7 @@
 
 from rpathplugin import rPathPlugin
 
-class RAPRSAKey(rPathPlugin):
+class AMIConfigPlugin(rPathPlugin):
     name = 'raprsakey'
 
     def pluginMethod(self):

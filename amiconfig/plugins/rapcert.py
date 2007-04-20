@@ -4,7 +4,7 @@
 
 from rpathplugin import rPathPlugin
 
-class RAPCert(rPathPlugin):
+class AMIConfigPlugin(rPathPlugin):
     name = 'rapcert'
 
     def pluginMethod(self):
