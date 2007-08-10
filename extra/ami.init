@@ -11,7 +11,7 @@
 RETVAL=0
 
 # Are we running in EC2?
-$(grep 'builder@patchbat.amazonsa' /proc/version 2>&1 >/dev/null) && $(grep 'SAST' /proc/version 2>&1 >/dev/null) || exit 0
+$(grep 'amazon' /proc/version 2>&1 >/dev/null) && $(grep 'SAST' /proc/version 2>&1 >/dev/null) || exit 0
 
 AMICONFIG="/usr/sbin/amiconfig"
 AMILOCK="/var/lock/subsys/amiconfig"
