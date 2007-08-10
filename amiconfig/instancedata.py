@@ -8,8 +8,10 @@ from urllib import urlopen
 from amiconfig.errors import *
 
 class InstanceData:
+    apiversion = '1.0'
+
     def __init__(self):
-        self.urlbase = 'http://169.254.169.254/1.0/'
+        self.urlbase = 'http://169.254.169.254/%s/' % self.apiversion
 
     def open(self, path):
         try:
