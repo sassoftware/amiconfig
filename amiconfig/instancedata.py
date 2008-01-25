@@ -67,4 +67,4 @@ class InstanceData:
         return list
 
     def getSSHKey(self, id=0):
-        return self.read('meta-data/public-keys/0/openssh-key')
+        return self.read('meta-data/public-keys/%s/openssh-key' % id)
