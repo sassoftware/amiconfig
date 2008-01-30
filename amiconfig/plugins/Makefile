@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2004-2007 rPath, Inc.
+# Copyright (c) 2004-2008 rPath, Inc.
 #
 # This program is distributed under the terms of the Common Public License,
 # version 1.0. A copy of this license should have been distributed with this
@@ -17,12 +17,15 @@ all: subdirs
 SUBDIRS=
 
 python_files = \
-	rootsshkeys.py \
-	rpathplugin.py \
+	conaryproxy.py \
+	noip.py \
 	rapadminpassword.py \
 	rapcert.py \
 	raprsakey.py \
-	conaryproxy.py \
+	rmakenode.py \
+	rmakeplugin.py \
+	rootsshkeys.py \
+	rpathplugin.py \
 
 extra_files = \
 	Makefile
