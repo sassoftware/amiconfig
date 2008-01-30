@@ -1,3 +1,15 @@
+Changes in 0.2.0:
+  o New plugin architecture.
+  o The new plugin loader takes a list of plugins from the user data,
+    alieviating the need for rpathamiconfig.
+  o Added plugins for the following:
+    * noip - supports noip.com's dynamic dns update api
+    * rapcert - provide an ssl cert to be used in the rPath Appliance
+        Platform Agent.
+    * raprsakey - provide an rsa key pair for use in the rPath Appliance
+        Platform Agent.
+    * rmakenode - configure an rMake build node via user data.
+
 Changes in 0.1.1:
   o AMIConfig no longer tracebacks when a ssh key is not specified.
 
