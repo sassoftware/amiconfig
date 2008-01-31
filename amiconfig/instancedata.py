@@ -11,11 +11,11 @@ class InstanceData:
     apiversion = '1.0'
 
     def __init__(self):
-        self.urlbase = 'http://169.254.169.254/%s/' % self.apiversion
+        self.urlbase = 'http://169.254.169.254'
 
     def open(self, path):
         try:
-            results = urlopen('%s/%s' % (self.urlbase, path))
+            results = urlopen('%s/%s/%s' % (self.urlbase, self.apiversion, path))
         except Exception, e:
             raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
         if results.headers.gettype() == 'text/html':
