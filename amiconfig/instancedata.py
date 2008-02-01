@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2008 rPath, Inc.
 #
 
 import socket
@@ -8,7 +8,7 @@ from urllib import urlopen
 from amiconfig.errors import *
 
 class InstanceData:
-    apiversion = '1.0'
+    apiversion = '2007-12-15'
 
     def __init__(self):
         self.urlbase = 'http://169.254.169.254'
@@ -37,14 +37,23 @@ class InstanceData:
     def getAMIManifestPath(self):
         return self.read('meta-data/ami-manifest-path')
 
-    def getHostname(self):
-        return self.read('meta-data/hostname')
-
     def getInstanceId(self):
         return self.read('meta-data/instance-id')
 
+    def getInstanceType(self):
+        return self.read('meta-data/instance-type')
+
+    def getLocalHostname(self):
+        return self.read('meta-data/local-hostname')
+
     def getLocalIPv4(self):
         return self.read('meta-data/local-ipv4')
+
+    def getPublicHostname(self):
+        return self.read('meta-data/public-hostname')
+
+    def getPublicIPv4(self):
+        return self.read('meta-data/public-ipv4')
 
     def getReservationId(self):
         return self.read('meta-data/reservation-id')
@@ -68,3 +77,9 @@ class InstanceData:
 
     def getSSHKey(self, id=0):
         return self.read('meta-data/public-keys/%s/openssh-key' % id)
+
+    def getBlockDeviceMapping(self):
+        map = {}
+        for key in self.read('meta-data/block-device-mapping/'):
+            map[key] = self.read('meta-data/block-device-mapping/%s' % key)
+        return map
