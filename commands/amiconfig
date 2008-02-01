@@ -1,10 +1,10 @@
 #!/usr/bin/python
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2008 rPath, Inc.
 #
 
 import sys
-from amiconfig.amiconfig import AMIConfig
+from amiconfig import AMIConfig
 
 amiConfig = AMIConfig()
 sys.exit(amiConfig.configure())
