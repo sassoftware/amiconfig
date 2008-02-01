@@ -1,4 +1,4 @@
-# Copyright (c) 2004-2006 rPath, Inc.
+# Copyright (c) 2004-2008 rPath, Inc.
 #
 # This program is distributed under the terms of the Common Public License,
 # version 1.0. A copy of this license should have been distributed with this
@@ -13,9 +13,9 @@
 
 version = "@version@"
 
-PLUGIN_PATH = ['@amiconfigdir@/plugins',
-               '@libdir@/amiconfig/plugins']
+PLUGIN_PATH = [ '@amiconfigdir@/plugins',
+                '@libdir@/amiconfig/plugins' ]
 
 # List of plugins to always load and run. You can't turn these off, be carefull
 # about adding more.
-DEFAULT_PLUGINS = ['rootsshkeys']
+DEFAULT_PLUGINS = [ 'rootsshkeys' ]
