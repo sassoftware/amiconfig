@@ -26,6 +26,7 @@ python_files = \
 	rmakeplugin.py \
 	rootsshkeys.py \
 	rpathplugin.py \
+	storage.py
 
 extra_files = \
 	Makefile
