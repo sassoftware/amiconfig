@@ -3,9 +3,16 @@
 #
 
 import socket
-from urllib import urlopen
+from urllib import urlopen, FancyURLopener
 
 from amiconfig.errors import *
+from amiconfig.constants import version
+
+class URLOpener(FancyURLopener):
+    version = 'AMIConfig/%s elliot@rpath.com' % version
+
+urllib._urlopener = URLOpener()
+
 
 class InstanceData:
     apiversion = '2007-12-15'

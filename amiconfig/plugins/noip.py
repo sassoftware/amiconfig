@@ -7,13 +7,6 @@ import urlparse
 
 from amiconfig.errors import *
 from amiconfig.plugin import AMIPlugin
-from amiconfig.constants import version
-
-class URLOpener(urllib.FancyURLopener):
-    version = 'AMIConfig/%s elliot@rpath.com' % version
-
-urllib._urlopener = URLOpener
-
 
 class AMIConfigPlugin(AMIPlugin):
     name = 'noip'
