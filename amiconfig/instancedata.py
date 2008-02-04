@@ -80,6 +80,6 @@ class InstanceData:
 
     def getBlockDeviceMapping(self):
         map = {}
-        for key in self.read('meta-data/block-device-mapping/'):
+        for key in self.read('meta-data/block-device-mapping/').split():
             map[key] = self.read('meta-data/block-device-mapping/%s' % key)
         return map
