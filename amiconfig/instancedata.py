@@ -3,12 +3,12 @@
 #
 
 import socket
-from urllib import urlopen, FancyURLopener
+import urllib
 
 from amiconfig.errors import *
 from amiconfig.constants import version
 
-class URLOpener(FancyURLopener):
+class URLOpener(urllib.FancyURLopener):
     version = 'AMIConfig/%s elliot@rpath.com' % version
 
 urllib._urlopener = URLOpener()
@@ -22,7 +22,8 @@ class InstanceData:
 
     def open(self, path):
         try:
-            results = urlopen('%s/%s/%s' % (self.urlbase, self.apiversion, path))
+            results = urllib.urlopen('%s/%s/%s' % (self.urlbase,
+                                                   self.apiversion, path))
         except Exception, e:
             raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
         if results.headers.gettype() == 'text/html':
