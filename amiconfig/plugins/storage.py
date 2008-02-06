@@ -40,14 +40,12 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
         # Always mount swap
         swap = blkdevmap['swap']
         self.call(['swapon', swap])
-        del blkdevmap['swap']
 
         ephemeralDevs = []
         for key, dev in blkdevmap.iteritems():
             if 'ephemeral' in key:
                 mntpnt = '/ephemeral/%s' % key[9:]
                 ephemeralDevs.append(('/dev/%s' % dev, mntpnt))
-                del blkdevmap[key]
 
         relocatePaths = []
         if 'relocate-paths' in cfg:
@@ -89,10 +87,12 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
 
     def _allocateSpace(self, path, size):
         if size == 0: return
-        gByte = '\x00' * 1024 * 1024 * 1024
+        # convert size to kBytes
+        size = size * 1024 * 1024
+        kByte = '\x00' * 1024
         fd, name = tempfile.mkstemp(dir=path)
         os.unlink(name)
-        fh = os.fdopen(fd)
+        fh = os.fdopen(fd, 'w')
         for i in range(size):
             fh.write(gByte)
         fh.flush()
