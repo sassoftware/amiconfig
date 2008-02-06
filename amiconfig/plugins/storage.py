@@ -94,7 +94,7 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
         os.unlink(name)
         fh = os.fdopen(fd, 'w')
         for i in range(size):
-            fh.write(gByte)
+            fh.write(kByte)
         fh.flush()
         fh.close()
 
