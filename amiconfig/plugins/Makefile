@@ -24,6 +24,7 @@ python_files = \
 	raprsakey.py \
 	rmakenode.py \
 	rmakeplugin.py \
+	rmakeproxy.py \
 	rootsshkeys.py \
 	rpathplugin.py \
 	storage.py
