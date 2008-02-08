@@ -17,7 +17,10 @@ class rMakeProxy(rMakePlugin):
     def _setupProxy(self):
         proxycfg = '/etc/rmake/server.d/proxy'
 
-        host = self.id.getLocalHostname()
+        if 'conaryproxy' in self.rmakecfg:
+            proxy = self.rmakecfg['conaryproxy']
+        else:
+            host = self.id.getLocalHostname()
 
         fh = open(proxycfg, 'w')
         fh.write('proxy http://%s:7778/' % host)
