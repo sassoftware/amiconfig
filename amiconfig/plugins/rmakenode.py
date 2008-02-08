@@ -32,5 +32,7 @@ class AMIConfigPlugin(rPathPlugin):
             fh.write('rmakeUrl %s\n' % self.rmakecfg['rmakeurl'])
         if 'loadthreashold' in self.rmakecfg:
             fh.write('loadThreshold %s\n' % self.rmakecfg['loadthreashold'])
+        if 'useCache' in self.rmakecfg:
+            fh.write('useCache %s\n' % self.rmakecfg['useCache'])
 
         fh.close()
