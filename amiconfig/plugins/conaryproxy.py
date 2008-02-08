@@ -15,5 +15,6 @@ class AMIConfigPlugin(rPathPlugin):
         proxy = self.rpathcfg['conaryproxy']
 
         fh = open('/etc/conary/config.d/amiconfig', 'a')
-        fh.write('proxy http %s\n' % proxy)
+        fh.write('conaryProxy http %s\n' % proxy)
+        fh.write('conaryProxy https %s\n' % proxy.replace('http', 'https'))
         fh.close()
