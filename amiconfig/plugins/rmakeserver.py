@@ -10,11 +10,21 @@ class rMakeProxy(rMakePlugin):
     name = 'rmakeproxy'
 
     def pluginMethod(self):
+
+        self._setupProxy()
+        self._seutprBuilder()
+
+    def _setupProxy(self):
         proxycfg = '/etc/rmake/server.d/proxy'
-        if not os.access(proxycfg, os.W_OK):
-            return
 
         host = self.id.getLocalHostname()
 
         fh = open(proxycfg, 'w')
         fh.write('proxy http://%s:7778/' % host)
+
+    def _setuprBuilder(self):
+        rbuildercfg = '/etc/rmake/server.d/rbuilder'
+
+        if 'rbuilderurl' in self.rmakecfg:
+            fh = open(rbuildercfg, 'w')
+            fh.write('rbuilderUrl %s\n' % self.rmakecfg['rbuilderurl'])
