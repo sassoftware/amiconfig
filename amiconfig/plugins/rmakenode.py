@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2008 rPath, Inc.
 #
 
 import os
@@ -10,6 +10,11 @@ from rmakeplugin import rMakePlugin
 class AMIConfigPlugin(rPathPlugin):
     name = 'rmakenode'
 
+    def _write(self, file, value):
+        fh = open(self.dir + os.sep + file, 'w')
+        fh.write(value + '\n')
+        fh.close()
+
     def pluginMethod(self):
         """
         buildDir /srv/rmake-builddir
@@ -18,21 +23,23 @@ class AMIConfigPlugin(rPathPlugin):
         loadThreshold 10
         """
 
-        noderc = '/etc/rmake/noderc'
-        if os.access(noderc, os.W_OK):
-            fh = open(noderc, 'w')
-        else:
+        noded = '/etc/rmake/node.d'
+        if not os.access(noded, os.W_OK):
             return
+        self.dir = noded
 
         if 'builddir' in self.rmakecfg:
-            fh.write('buildDir %s\n' % self.rmakecfg['builddir'])
+            value = 'buildDir %s' % self.rmakecfg['builddir']
+            self._write('builddir', value)
         if 'slots' in self.rmakecfg:
-            fh.write('slots %s\n' % self.rmakecfg['slots'])
+            value = 'slots %s' % self.rmakecfg['slots']
+            self._write('slots', value)
         if 'rmakeurl' in self.rmakecfg:
-            fh.write('rmakeUrl %s\n' % self.rmakecfg['rmakeurl'])
+            value = 'rmakeUrl %s' % self.rmakecfg['rmakeurl']
+            self._write('rmakeurl', value)
         if 'loadthreashold' in self.rmakecfg:
-            fh.write('loadThreshold %s\n' % self.rmakecfg['loadthreashold'])
-        if 'useCache' in self.rmakecfg:
-            fh.write('useCache %s\n' % self.rmakecfg['useCache'])
-
-        fh.close()
+            value = 'loadThreshold %s' % self.rmakecfg['loadthreashold']
+            self._write('loadthreashold', value)
+        if 'usecache' in self.rmakecfg:
+            value = 'useCache %s' % self.rmakecfg['useCache']
+            self._write('usecache', value)
