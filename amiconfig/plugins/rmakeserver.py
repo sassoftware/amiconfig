@@ -6,13 +6,13 @@ import os
 
 from rmakeplugin import rMakePlugin
 
-class rMakeProxy(rMakePlugin):
-    name = 'rmakeproxy'
+class rMakeServer(rMakePlugin):
+    name = 'rmakeserver'
 
     def pluginMethod(self):
-
         self._setupProxy()
-        self._seutprBuilder()
+        self._setuprBuilder()
+        self._setupRepoUrl()
 
     def _setupProxy(self):
         proxycfg = '/etc/rmake/server.d/proxy'
@@ -23,7 +23,7 @@ class rMakeProxy(rMakePlugin):
             host = self.id.getLocalHostname()
 
         fh = open(proxycfg, 'w')
-        fh.write('proxy http://%s:7778/' % host)
+        fh.write('proxy http://%s:7778/\n' % host)
 
     def _setuprBuilder(self):
         rbuildercfg = '/etc/rmake/server.d/rbuilder'
@@ -31,3 +31,14 @@ class rMakeProxy(rMakePlugin):
         if 'rbuilderurl' in self.rmakecfg:
             fh = open(rbuildercfg, 'w')
             fh.write('rbuilderUrl %s\n' % self.rmakecfg['rbuilderurl'])
+
+    def _setupRepoUrl(self):
+        repourlcfg = '/etc/rmake/server.d/serverurl'
+
+        if 'serverurl' in self.rmakecfg:
+            url = self.rmakecfg['serverurl']
+        else:
+            url = 'http://%s/conary/' % self.id.getLocalHostname()
+
+        fh = open(repourlcfg, 'w')
+        fh.write('serverUrl %s\n' % url)
