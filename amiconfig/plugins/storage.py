@@ -69,7 +69,7 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
             # size is in GB
             size = int(cfg['pre-allocated-space'])
 
-        for i, (dev, mntpnt) in enumerate(ephmeralDevs):
+        for i, (dev, mntpnt) in enumerate(ephemeralDevs):
             self._mount(dev, mntpnt)
             self._allocateSpace(mntpnt, size)
             for j in range((i+1) * pathsPerDev):
