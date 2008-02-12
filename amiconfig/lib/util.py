@@ -5,6 +5,7 @@
 import os
 import stat
 import shutil
+import tempfile
 import subprocess
 
 def call(self, cmd, stdout=None, stderr=None, stdin=None):
@@ -60,3 +61,18 @@ def copytree(src, dst, symlink=False):
 def movetree(src, dst, symlink=False):
     copytree(src, dst, symlink=symlink)
     shutil.rmtree(src)
+
+def createUnlinkedTmpFile(path):
+    fd, name = tempfile.mkstemp(dir=path)
+    os.unlink(name)
+    fh = os.fdopen(fd, 'w')
+    return fh
+
+def growFile(fh, size):
+    """ Fill a file with zeros up to a specified size. """
+    # Convert to mBytes -> kBytes
+    size = size * 1024
+    kByte = '\x00' * 1024
+    for i in range(size):
+        fh.write(kByte)
+    fh.flush()
