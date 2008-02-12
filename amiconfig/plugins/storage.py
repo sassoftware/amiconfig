@@ -4,27 +4,24 @@
 
 import os
 import math
-import shutil
-import tempfile
-import subprocess
 
 from amiconfig.errors import *
+from amiconfig.lib import util
+from amiconfig.lib import spacedaemon
 from amiconfig.plugin import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):
     name = 'storage'
 
-    def call(self, cmd):
-        null = open(os.devnull, 'w')
-        return subprocess.call(cmd, stdout=null, stderr=null)
-
     def configure(self):
         """
-[storage]
-# size in GB
-pre-allocated-space = 20
-# list of ':' seperated dirs
-relocate-paths = /srv/rmake-builddir:/srv/mysql
+        [storage]
+        # disable the spacedaemon
+        daemon = False
+        # size in GB
+        pre-allocated-space = 20
+        # list of ':' seperated dirs
+        relocate-paths = /srv/rmake-builddir:/srv/mysql
         """
 
         try:
@@ -39,7 +36,7 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
 
         # Always mount swap
         swap = blkdevmap['swap']
-        self.call(['swapon', swap])
+        util.call(['swapon', swap])
 
         ephemeralDevs = []
         for key, dev in blkdevmap.iteritems():
@@ -59,7 +56,8 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
 
         pathsPerDev = relocatePathsCount
         if ephemeralDevsCount > 1 and relocatePathsCount > 1:
-            pathsPerDev = math.ceil(relocatePathsCount / float(ephemeralDevsCount))
+            pathsPerDev = math.ceil(relocatePathsCount /
+                                    float(ephemeralDevsCount))
 
         # The ephemeral space is a sparce file on an independent spindle. To
         # increate performance you want to create a file under the ephemeral
@@ -69,47 +67,31 @@ relocate-paths = /srv/rmake-builddir:/srv/mysql
             # size is in GB
             size = int(cfg['pre-allocated-space'])
 
+        # Get daemon configuration.
+        daemon = True
+        if 'daemon' in cfg:
+            daemon = bool(cfg['daemon'])
+
+        paths = []
         for i, (dev, mntpnt) in enumerate(ephemeralDevs):
-            self._mount(dev, mntpnt)
-            self._allocateSpace(mntpnt, size)
+            util.mkdirChain(mntpnt)
+            util.call(['mount', dev, mntpnt])
+
+            if daemon:
+                paths.append(mntpnt)
+            else:
+                fh = util.createUnlinkedTmpFile(mntpnt)
+                util.growFile(fh, size * 1024)
+                fh.close()
+
             for j in range((i+1) * pathsPerDev):
                 if relocatePathsCount > j:
-                    self._moveDir(relocatePaths[j], '%s/%s' % (mntpnt, relocatePaths[j]))
+                    util.movetree(relocatePaths[j],
+                                  '%s/%s' % (mntpnt, relocatePaths[j]))
+                    os.symlink('%s/%s' % (mntpnt, relocatePaths[j]),
+                               relocatePaths[j])
 
-    def _mount(self, dev, path):
-        self._mkdirChain(path)
-        self.call(['mount', dev, path])
-
-    def _moveDir(self, oldPath, newPath):
-        self._mkdirChain(os.path.dirname(newPath))
-        shutil.move(oldPath, newPath)
-        os.symlink(newPath, oldPath)
-
-    def _allocateSpace(self, path, size):
-        if size == 0: return
-        # convert size to kBytes
-        size = size * 1024 * 1024
-        kByte = '\x00' * 1024
-        fd, name = tempfile.mkstemp(dir=path)
-        os.unlink(name)
-        fh = os.fdopen(fd, 'w')
-        for i in range(size):
-            fh.write(kByte)
-        fh.flush()
-        fh.close()
-
-    def _mkdirChain(self, path):
-        for dir in self._splitPath(path):
-            if not os.path.exists(dir):
-                os.mkdir(dir)
-                continue
-            if not os.path.isdir(dir):
-                raise OSError, 'File exists'
-
-    def _splitPath(self, path):
-        dirs = []
-        current = os.sep
-        for level in path.split(os.sep):
-            current = os.path.join(current, level)
-            dirs.append(current)
-        return dirs
+        if daemon and len(paths) > 0:
+            cmd = [ spacedaemon.__file__, size * 1024 ]
+            cmd.extend(paths)
+            util.call(cmd)
