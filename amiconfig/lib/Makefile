@@ -12,23 +12,18 @@
 # full details.
 #
 
-all: subdirs constants.py
+all: subdirs
 
-SUBDIRS=plugins lib
+SUBDIRS=
 
 python_files = \
+	daemon.py \
 	__init__.py \
-	ami.py \
-	constants.py \
-	encoding.py \
-	errors.py \
-	instancedata.py \
-	plugin.py \
-	userdata.py
+	spacedaemon.py \
+	util.py
 
 extra_files = \
-	Makefile \
-	constants.py.in
+	Makefile
 
 dist_files = $(python_files) $(extra_files)
 
@@ -39,9 +34,7 @@ generated_files = *.pyo *.pyc
 subdirs: default-subdirs
 
 constants.py: constants.py.in ../Makefile
-	sed -e s,@version@,$(VERSION),g $< > $@
-	sed -i s,@amiconfigdir@,$(amiconfigdir),g $@
-	sed -i s,@libdir@,$(libdir),g $@
+	sed s,@version@,$(VERSION),g $< > $@
 
 install: all install-subdirs pyfiles-install
 	$(PYTHON) -c "import compileall; compileall.compile_dir('$(DESTDIR)$(amiconfigdir)', ddir='$(amiconfigdir)', quiet=1)"
@@ -50,6 +43,5 @@ install: all install-subdirs pyfiles-install
 dist: default-dist
 
 clean: clean-subdirs default-clean
-	rm -f constants.py
 
-include ../Make.rules
+include ../../Make.rules
