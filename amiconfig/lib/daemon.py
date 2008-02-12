@@ -2,6 +2,10 @@
 # Copyright (c) 2008 rPath, Inc.
 #
 
+import os
+import sys
+import time
+
 class Daemon(object):
     def start(self):
         """ Stub for subclasses to implement. """
