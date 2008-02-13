@@ -4,6 +4,7 @@
 
 import os
 import stat
+import zlib
 import base64
 import shutil
 import tempfile
@@ -14,6 +15,12 @@ def encode(s):
 
 def decode(s):
     return base64.decodestring(s)
+
+def compress(s, level=9):
+    return zlib.compress(s, level)
+
+def decompress(s):
+    return zlib.decompress(s)
 
 def call(cmd, stdout=None, stderr=None, stdin=None):
     null = open(os.devnull, 'w')
