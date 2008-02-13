@@ -61,9 +61,13 @@ verb 3
         cfg['certfile'] = os.path.join(cfgdir, 'cert.crt')
         cfg['keyfile'] = os.path.join(cfgdir, 'key.key')
 
-        open(cfg['cafile'], 'w').write(util.decompress(cfg['ca']))
-        open(cfg['certfile'], 'w').write(util.decompress(cfg['cert']))
-        open(cfg['keyfile'], 'w').write(util.decompress(cfg['key']))
+        ca = util.decode(util.decompress(cfg['ca']))
+        cert = util.decode(util.decompress(cfg['cert']))
+        key = util.decode(util.decompress(cfg['key']))
+
+        open(cfg['cafile'], 'w').write(ca)
+        open(cfg['certfile'], 'w').write(cert)
+        open(cfg['keyfile'], 'w').write(key)
 
         cfgfile = os.path.join('etc', 'openvpn', 'amiconfig.conf')
         open(cfgfile, 'w').write(template % cfg)
