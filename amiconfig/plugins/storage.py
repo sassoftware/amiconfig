@@ -93,6 +93,6 @@ class AMIConfigPlugin(AMIPlugin):
                                relocatePaths[j])
 
         if daemon and len(paths) > 0:
-            cmd = [ spacedaemon.__file__, size * 1024 ]
+            cmd = [ spacedaemon.__file__, str(size * 1024) ]
             cmd.extend(paths)
             util.call(cmd)
