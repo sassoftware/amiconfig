@@ -85,7 +85,8 @@ class AMIConfigPlugin(AMIPlugin):
                 fh.close()
 
             for j in range((i+1) * pathsPerDev):
-                if relocatePathsCount > j:
+                if relocatePathsCount > j and os.path.exists(relocatePaths[j]) \
+                    and not os.path.islink(relocatePaths[j]):
                     util.movetree(relocatePaths[j],
                                   '%s/%s' % (mntpnt, relocatePaths[j]))
                     os.symlink('%s/%s' % (mntpnt, relocatePaths[j]),
