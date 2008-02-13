@@ -8,7 +8,7 @@ import shutil
 import tempfile
 import subprocess
 
-def call(self, cmd, stdout=None, stderr=None, stdin=None):
+def call(cmd, stdout=None, stderr=None, stdin=None):
     null = open(os.devnull, 'w')
     if not stdout:
         stdout = null
@@ -18,7 +18,7 @@ def call(self, cmd, stdout=None, stderr=None, stdin=None):
         stdin = null
     return subprocess.call(cmd, stdout=stdout, stderr=stderr, stdin=stdin)
 
-def _splitPath(self, path):
+def _splitPath(path):
     dirs = []
     current = os.sep
     for level in path.split(os.sep):
@@ -26,7 +26,7 @@ def _splitPath(self, path):
         dirs.append(current)
     return dirs
 
-def mkdirChain(self, path):
+def mkdirChain(path):
     for dir in _splitPath(path):
         if not os.path.exists(dir):
             os.mkdir(dir)
