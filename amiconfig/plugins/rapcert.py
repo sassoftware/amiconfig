@@ -1,7 +1,8 @@
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2008 rPath, Inc.
 #
 
+from amiconfig.lib import util
 from rpathplugin import rPathPlugin
 
 class AMIConfigPlugin(rPathPlugin):
@@ -11,8 +12,5 @@ class AMIConfigPlugin(rPathPlugin):
         if 'rapcert' not in self.rpathcfg:
             return
 
-        cert = self.decode(self.rpathcfg['rapcert'])
-
-        fh = open('/etc/ssl/pem/raa.pen', 'w')
-        fh.write(cert)
-        fh.close()
+        url = self.rpathcfg['rapcert']
+        util.urlgrab(url, filename='/etc/ssl/pem/raa.pem')

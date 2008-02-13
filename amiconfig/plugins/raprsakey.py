@@ -1,7 +1,8 @@
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2008 rPath, Inc.
 #
 
+from amiconfig.lib import util
 from rpathplugin import rPathPlugin
 
 class AMIConfigPlugin(rPathPlugin):
@@ -12,13 +13,8 @@ class AMIConfigPlugin(rPathPlugin):
             'rapprivatekey' not in self.rpathcfg):
             return
 
-        pub = self.rpathcfg['rappublickey']
-        priv = self.rpathcfg['rapprivatekey']
+        puburl = self.rpathcfg['rappublickey']
+        privurl = self.rpathcfg['rapprivatekey']
 
-        pubfile = open('/etc/raa/raa-service.pubkey', 'w')
-        pubfile.write(pub)
-        pubfile.close()
-
-        privfile = open('/etc/raa/raa-service.privkey', 'w')
-        privfile.write(priv)
-        privfile.close()
+        util.urlgrab(puburl, filename='/etc/raa/raa-service.pubkey')
+        util.urlgrab(privurl, filename='/etc/raa/raa-service.privkey')
