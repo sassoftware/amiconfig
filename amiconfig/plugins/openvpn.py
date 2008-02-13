@@ -61,11 +61,11 @@ verb 3
         cfg['certfile'] = os.path.join(cfgdir, 'cert.crt')
         cfg['keyfile'] = os.path.join(cfgdir, 'key.key')
 
-        ca = util.decode(util.decompress(cfg['ca']))
+        util.urlgrab(cfg['ca'], filename=cfg['cafile'])
+
         cert = util.decode(util.decompress(cfg['cert']))
         key = util.decode(util.decompress(cfg['key']))
 
-        open(cfg['cafile'], 'w').write(ca)
         open(cfg['certfile'], 'w').write(cert)
         open(cfg['keyfile'], 'w').write(key)
 
