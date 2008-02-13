@@ -20,7 +20,6 @@ python_files = \
 	__init__.py \
 	ami.py \
 	constants.py \
-	encoding.py \
 	errors.py \
 	instancedata.py \
 	plugin.py \
