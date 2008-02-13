@@ -7,6 +7,8 @@ import stat
 import zlib
 import base64
 import shutil
+import urllib2
+import urlparse
 import tempfile
 import subprocess
 
@@ -93,3 +95,13 @@ def growFile(fh, size):
     for i in range(size):
         fh.write(kByte)
     fh.flush()
+
+def urlgrab(url, filename=None):
+    if not filename:
+        file = os.path.basename(urlparse.urlsplit(url)[2])
+    else:
+        file = filename
+    fh = open(file, 'w')
+    fh.write(urllib2.urlopen(url).read())
+    fh.close()
+    return file
