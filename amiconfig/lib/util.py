@@ -4,9 +4,16 @@
 
 import os
 import stat
+import base64
 import shutil
 import tempfile
 import subprocess
+
+def encode(s):
+    return base64.encodestring(s).replace('\n', '')
+
+def decode(s):
+    return base64.decodestring(s)
 
 def call(cmd, stdout=None, stderr=None, stdin=None):
     null = open(os.devnull, 'w')
@@ -62,8 +69,11 @@ def movetree(src, dst, symlink=False):
     copytree(src, dst, symlink=symlink)
     shutil.rmtree(src)
 
-def createUnlinkedTmpFile(path):
-    fd, name = tempfile.mkstemp(dir=path)
+def createUnlinkedTmpFile(path=None):
+    if path:
+        fd, name = tempfile.mkstemp(dir=path)
+    else:
+        fd, name = tempfile.mkstemp()
     os.unlink(name)
     fh = os.fdopen(fd, 'w')
     return fh
