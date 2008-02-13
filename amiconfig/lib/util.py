@@ -48,7 +48,7 @@ def copytree(src, dst, symlink=False):
         shutil.copy2(src, dst)
         return
 
-    shutil.copytree(src, dst, symlink=symlink)
+    shutil.copytree(src, dst, symlink)
     _copystat(src, dst)
 
     for srcdir, dirs, files in os.walk(src):
