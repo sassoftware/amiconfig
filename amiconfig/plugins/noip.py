@@ -13,31 +13,31 @@ class AMIConfigPlugin(AMIPlugin):
 
     def configure(self):
         try:
-            self.cfg = self.ud.getSection('noip')
+            cfg = self.ud.getSection('noip')
         except EC2DataRetrievalError:
             return
 
         for key in ('username', 'password'):
-            if key not in self.cfg:
+            if key not in cfg:
                 return
 
         template = True
         for key in ('prefix', 'domain', 'start'):
-            if key not in self.cfg:
+            if key not in cfg:
                 template = False
                 break
 
-        if not template and 'hostname' not in self.cfg:
+        if not template and 'hostname' not in cfg:
             return
 
         if template:
             index = int(self.id.getAMILaunchIndex())
-            start = int(self.cfg['start'])
+            start = int(cfg['start'])
             id = '%02d' % (start + index)
-            self.cfg['hostname'] = '%s.%s' % (id, self.cfg['domain'])
+            cfg['hostname'] = '%s%s.%s' % (cfg['prefix'], id, cfg['domain'])
 
         url = ('https://%(username)s:%(password)s@dynupdate.no-ip.com'
-               '/nic/update?hostname=%(hostname)s') % self.cfg
+               '/nic/update?hostname=%(hostname)s') % cfg
 
         urlfh = urllib.urlopen(url)
 
