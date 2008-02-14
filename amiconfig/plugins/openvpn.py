@@ -54,7 +54,7 @@ verb 3
         if 'proto' not in cfg:
             cfg['proto'] = 'udp'
 
-        cfgdir = os.path.join('etc', 'openvpn', 'amiconfig')
+        cfgdir = os.path.join('/', 'etc', 'openvpn', 'amiconfig')
         util.mkdirChain(cfgdir)
 
         cfg['cafile'] = os.path.join(cfgdir, 'ca.crt')
@@ -69,5 +69,5 @@ verb 3
         open(cfg['certfile'], 'w').write(cert)
         open(cfg['keyfile'], 'w').write(key)
 
-        cfgfile = os.path.join('etc', 'openvpn', 'amiconfig.conf')
+        cfgfile = os.path.join('/', 'etc', 'openvpn', 'amiconfig.conf')
         open(cfgfile, 'w').write(template % cfg)
