@@ -12,7 +12,8 @@ from amiconfig.userdata import UserData
 from amiconfig.instancedata import InstanceData
 
 class AMIConfig(object):
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         self.id = InstanceData()
         self.ud = UserData(self.id)
         self.plugins = {}
@@ -48,6 +49,8 @@ class AMIConfig(object):
                     results[name] = (1, str(e))
                 except Exception, e:
                     results[name] = (2, str(e))
+                    if self.debug:
+                        raise
             else:
                 results[name] = (3, '')
         return results
