@@ -69,7 +69,7 @@ def copytree(src, dst, symlink=False):
 
     for srcdir, dirs, files in os.walk(src):
         dstdir = os.path.join(dst, srcdir[len(src):])
-        for elements in dirs + files:
+        for element in dirs + files:
             srcE = os.path.join(srcdir, element)
             dstE = os.path.join(dstdir, element)
             _copystat(srcE, dstE)
