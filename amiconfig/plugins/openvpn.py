@@ -63,8 +63,8 @@ verb 3
 
         util.urlgrab(cfg['ca'], filename=cfg['cafile'])
 
-        cert = util.decode(util.decompress(cfg['cert']))
-        key = util.decode(util.decompress(cfg['key']))
+        cert = util.decompress(util.decode(cfg['cert']))
+        key = util.decompress(util.decode(cfg['key']))
 
         open(cfg['certfile'], 'w').write(cert)
         open(cfg['keyfile'], 'w').write(key)
