@@ -14,6 +14,8 @@ class AMIConfigPlugin(AMIPlugin):
     def configure(self):
         """
         [openvpn]
+        nameserver = 192.168.1.1
+        search = foo.example.com bar.example.com
         server = myvpn.example.com
         port = 1194
         proto = tcp
@@ -71,3 +73,10 @@ verb 3
 
         cfgfile = os.path.join('/', 'etc', 'openvpn', 'amiconfig.conf')
         open(cfgfile, 'w').write(template % cfg)
+
+        if 'nameserver' in cfg:
+            resolv = open('/etc/resolv.conf', 'w')
+            if 'search' in cfg:
+                resolv.write('search %s\n' % cfg['search'])
+            resolv.write('nameserver %s\n' % cfg['nameserver'])
+            resolv.close()
