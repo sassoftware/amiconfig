@@ -93,6 +93,9 @@ class AMIConfigPlugin(AMIPlugin):
                                relocatePaths[j])
 
         if daemon and len(paths) > 0:
-            cmd = [ spacedaemon.__file__, str(size * 1024) ]
+            exe = spacedaemon.__file__
+            if exe.endswith('.pyc'):
+                exe = exe[:-1]
+            cmd = [ exe, str(size * 1024) ]
             cmd.extend(paths)
             util.call(cmd)
