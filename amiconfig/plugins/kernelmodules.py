@@ -35,4 +35,4 @@ class AMIConfigPlugin(AMIPlugin):
         for member in tf.getmembers():
             tf.extract(member, path='/')
 
-        util.call('depmod -a')
+        util.call(['depmod', '-a'])
