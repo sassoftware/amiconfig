@@ -30,7 +30,7 @@ class AMIConfigPlugin(AMIPlugin):
         url = baseurl + map[key]
 
         file = util.urlgrab(url, filename=tempfile.mktemp())
-        tf = tarfile(file)
+        tf = tarfile.TarFile.gzopen(file)
 
         for member in tf.getmembers():
             tf.extract(member, path='/')
