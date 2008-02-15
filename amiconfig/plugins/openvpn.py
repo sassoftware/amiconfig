@@ -36,8 +36,8 @@ proto %(proto)s
 remote %(server)s %(port)s
 resolv-retry infinite
 nobind
-user nobody
-group nobody
+#user nobody
+#group nobody
 persist-key
 persist-tun
 ca %(cafile)s
