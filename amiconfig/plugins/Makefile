@@ -18,6 +18,7 @@ SUBDIRS=
 
 python_files = \
 	conaryproxy.py \
+	kernelmodules.py \
 	noip.py \
 	openvpn.py \
 	rapadminpassword.py \
