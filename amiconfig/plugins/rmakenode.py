@@ -7,7 +7,7 @@ import os
 from amiconfig.errors import *
 from rmakeplugin import rMakePlugin
 
-class AMIConfigPlugin(rPathPlugin):
+class AMIConfigPlugin(rMakePlugin):
     name = 'rmakenode'
 
     def _write(self, file, value):
