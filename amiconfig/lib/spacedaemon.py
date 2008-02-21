@@ -40,11 +40,14 @@ class SpaceDaemon(Daemon):
             self._fs.append(SpaceAllocator(path))
 
     def start(self):
-        """ Every 60s try to allocate more space. """
+        """ Every 5min try to allocate more space. """
+        # Wait a couple of minutes before starting allocation to let the
+        # machine finish booting.
+        time.sleep(120)
         while True:
             for fs in self._fs:
                 fs.grow(self._size)
-            time.sleep(60)
+            time.sleep(300)
 
 
 if __name__ == '__main__':
