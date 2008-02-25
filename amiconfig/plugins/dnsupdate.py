@@ -2,10 +2,10 @@
 # Copyright (c) 2008 rPath, Inc.
 #
 
-import dns.tsigkeyring
-import dns.update
-import dns.query
 import sys
+import dns.query
+import dns.update
+import dns.tsigkeyring
 
 from amiconfig.errors import *
 from amiconfig.plugin import AMIPlugin
