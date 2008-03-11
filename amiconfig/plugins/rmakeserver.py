@@ -6,7 +6,7 @@ import os
 
 from rmakeplugin import rMakePlugin
 
-class rMakeServer(rMakePlugin):
+class AMIConfigPlugin(rMakePlugin):
     name = 'rmakeserver'
 
     def pluginMethod(self):
