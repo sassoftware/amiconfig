@@ -5,6 +5,7 @@
 
 import os
 import time
+from syslog import syslog as log
 
 from amiconfig.lib import util
 from amiconfig.lib.daemon import Daemon
@@ -25,9 +26,11 @@ class SpaceAllocator(object):
         # size is in MB
         # make sure that 20% over current usage is preallocated
         fh = util.createUnlinkedTmpFile(self._path)
-        while self._allocated < 1.2 * self._getFileSystemUsage():
+        usage = self._getFileSystemUsage()
+        while self._allocated < 1.2 * usage:
             util.growFile(fh, size)
             self._allocated += size
+            log('growing %s to %sMB' % (self._path, self._allocated))
         fh.close()
 
 
@@ -43,10 +46,12 @@ class SpaceDaemon(Daemon):
         """ Every 5min try to allocate more space. """
         # Wait a couple of minutes before starting allocation to let the
         # machine finish booting.
+        log('sleeping 120s before growing filesystems')
         time.sleep(120)
         while True:
             for fs in self._fs:
                 fs.grow(self._size)
+            log('sleeping 300s')
             time.sleep(300)
 
 
