@@ -20,10 +20,10 @@ class AMIConfigPlugin(rMakePlugin):
         if 'conaryproxy' in self.rmakecfg:
             proxy = self.rmakecfg['conaryproxy']
         else:
-            host = self.id.getLocalHostname()
+            proxy = 'http://%s:7778/' % self.id.getLocalHostname()
 
         fh = open(proxycfg, 'w')
-        fh.write('proxy http://%s:7778/\n' % host)
+        fh.write('proxy %s\n' % proxy)
 
     def _setuprBuilder(self):
         rbuildercfg = '/etc/rmake/server.d/rbuilder'
