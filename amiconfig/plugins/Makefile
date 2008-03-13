@@ -19,6 +19,7 @@ SUBDIRS=
 python_files = \
 	conaryproxy.py \
 	dnsupdate.py \
+	hostname.py \
 	kernelmodules.py \
 	noip.py \
 	openvpn.py \
