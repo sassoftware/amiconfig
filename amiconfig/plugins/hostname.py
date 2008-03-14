@@ -19,4 +19,4 @@ class AMIConfigPlugin(AMIPlugin):
             except EC2DataRetrievalError:
                 return
 
-        util.call('hostname %s' % hostname)
+        util.call(['hostname', hostname])
