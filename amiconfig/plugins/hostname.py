@@ -13,7 +13,7 @@ class AMIConfigPlugin(AMIPlugin):
         try:
             cfg = self.ud.getSection('hostname')
             hostname = cfg['hostname']
-        except (EC2DataRetrievalError, KeyError):
+        except (EC2DataRetrievalError, KeyError, TypeError):
             try:
                 hostname = self.id.getLocalHostname()
             except EC2DataRetrievalError:
