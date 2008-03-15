@@ -35,8 +35,9 @@ class AMIConfigPlugin(AMIPlugin):
             return
 
         # Always mount swap
-        swap = blkdevmap['swap']
-        util.call(['swapon', swap])
+        if 'swap' in blkdevmap:
+            swap = blkdevmap['swap']
+            util.call(['swapon', swap])
 
         ephemeralDevs = []
         for key, dev in blkdevmap.iteritems():
