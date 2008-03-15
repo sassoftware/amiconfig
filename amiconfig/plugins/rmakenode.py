@@ -41,5 +41,5 @@ class AMIConfigPlugin(rMakePlugin):
             value = 'loadThreshold %s' % self.rmakecfg['loadthreashold']
             self._write('loadthreashold', value)
         if 'usecache' in self.rmakecfg:
-            value = 'useCache %s' % self.rmakecfg['useCache']
+            value = 'useCache %s' % self.rmakecfg['usecache']
             self._write('usecache', value)
