@@ -17,11 +17,11 @@ class AMIConfigPlugin(AMIPlugin):
     def configure(self):
         try:
             # NOTE: This method forces all variable names to be lower case
-            self.cfg = self.ud.getSection('dnsupdate')
+            cfg = self.ud.getSection('dnsupdate')
         except EC2DataRetrievalError:
             return
         for key in ('tsighost', 'tsigkey', 'host', 'domain', 'server'):
-            if key not in self.cfg:
+            if key not in cfg:
                 return
 
         instanceid = self.id.getInstanceId()
@@ -37,27 +37,27 @@ class AMIConfigPlugin(AMIPlugin):
             index = int(self.id.getAMILaunchIndex())
             start = int(cfg['start'])
             clusterid = '%02d' % (start + index)
-            self.cfg['host'] = '%s%s' % (cfg['prefix'], clusterid)
+            cfg['host'] = '%s%s' % (cfg['prefix'], clusterid)
 
         # Set keyring using TSIG variables from User Data
         keyring = dns.tsigkeyring.from_text({
-            self.cfg['tsighost'] : self.cfg['tsigkey']
+            cfg['tsighost'] : cfg['tsigkey']
         })
-        update = dns.update.Update(self.cfg['domain'], keyring=keyring)
+        update = dns.update.Update(cfg['domain'], keyring=keyring)
 
         # Clear all TXT and A entries for domain
-        update.delete(self.cfg['host'], 'a')
-        response = dns.query.tcp(update, self.cfg['server'])
-        update.delete(self.cfg['host'], 'txt')
-        response = dns.query.tcp(update, self.cfg['server'])
+        update.delete(cfg['host'], 'a')
+        response = dns.query.tcp(update, cfg['server'])
+        update.delete(cfg['host'], 'txt')
+        response = dns.query.tcp(update, cfg['server'])
 
         # Create A entry with public IP address
-        update.add(self.cfg['host'], 300, 'a', ipaddr)
-        response = dns.query.tcp(update, self.cfg['server'])
+        update.add(cfg['host'], 300, 'a', ipaddr)
+        response = dns.query.tcp(update, cfg['server'])
 
         # Create TXT entry with instanceID
-        update.add(self.cfg['host'], 300, 'txt', instanceid)
-        response = dns.query.tcp(update, self.cfg['server'])
+        update.add(cfg['host'], 300, 'txt', instanceid)
+        response = dns.query.tcp(update, cfg['server'])
 
         # Response checking code should live here
 
