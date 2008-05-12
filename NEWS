@@ -1,3 +1,16 @@
+Changes in 0.3.0:
+  o Many bug fixes
+  o Updated to the 12-15-2007 instancedata spec
+  o As part of the storage plugin work, added a daemon that pre-allocates
+    ephemeral storage for added IO performance
+  o Added new plugins:
+    * dnsupdate - updating dynamic dns server
+    * hostname - setting the hostname of your ec2 instances
+    * kernelmodules - attempts to download the modules that match the
+        currently running kernel
+    * openvpn - configure openvpn
+    * rmakeserver - configure an rmake server
+    * storage - used to configure elements of the ec2 ephemeral storage
 Changes in 0.2.0:
   o New plugin architecture.
   o The new plugin loader takes a list of plugins from the user data,

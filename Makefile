@@ -14,7 +14,7 @@
 
 all: subdirs
 
-export VERSION = 0.2.0
+export VERSION = 0.3.0
 export TOPDIR = $(shell pwd)
 export DISTDIR = $(TOPDIR)/amiconfig-$(VERSION)
 export sysconfdir = /etc
