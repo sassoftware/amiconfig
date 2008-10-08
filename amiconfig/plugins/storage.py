@@ -60,9 +60,9 @@ class AMIConfigPlugin(AMIPlugin):
             pathsPerDev = math.ceil(relocatePathsCount /
                                     float(ephemeralDevsCount))
 
-        # The ephemeral space is a sparce file on an independent spindle. To
-        # increate performance you want to create a file under the ephemeral
-        # mout point to pre allocate the sparce file.
+        # The ephemeral space is a sparse file on an independent spindle. To
+        # increase performance you want to create a file under the ephemeral
+        # mout point to pre allocate the sparse file.
         size = 0
         if 'pre-allocated-space' in cfg:
             # size is in GB
