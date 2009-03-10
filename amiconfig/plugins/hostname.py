@@ -10,10 +10,10 @@ class AMIConfigPlugin(AMIPlugin):
     name = 'hostname'
 
     def configure(self):
-        try:
-            cfg = self.ud.getSection('hostname')
+        cfg = self.ud.getSection('hostname')
+        if 'hostname' in cfg:
             hostname = cfg['hostname']
-        except (EC2DataRetrievalError, KeyError, TypeError):
+        else:
             try:
                 hostname = self.id.getLocalHostname()
             except EC2DataRetrievalError:

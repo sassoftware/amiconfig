@@ -59,3 +59,5 @@ class UserData(ConfigParser):
                     return self._sections[name]
         elif name in self._sections:
             return self._sections[name]
+
+        return {}

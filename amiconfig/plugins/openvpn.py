@@ -24,10 +24,7 @@ class AMIConfigPlugin(AMIPlugin):
         key = <compressed cert>
         """
 
-        try:
-            cfg = self.ud.getSection('openvpn')
-        except KeyError:
-            return
+        cfg = self.ud.getSection('openvpn')
 
         template = """\
 client

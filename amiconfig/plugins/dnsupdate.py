@@ -15,11 +15,7 @@ from amiconfig.instancedata import InstanceData
 class AMIConfigPlugin(AMIPlugin):
     name = 'dnsupdate'
     def configure(self):
-        try:
-            # NOTE: This method forces all variable names to be lower case
-            cfg = self.ud.getSection('dnsupdate')
-        except EC2DataRetrievalError:
-            return
+        cfg = self.ud.getSection('dnsupdate')
         for key in ('tsighost', 'tsigkey', 'host', 'domain', 'server'):
             if key not in cfg:
                 return

@@ -29,10 +29,7 @@ class AMIConfigPlugin(AMIPlugin):
         except EC2DataRetrievalError:
             return
 
-        try:
-            cfg = self.ud.getSection('storage')
-        except KeyError:
-            return
+        cfg = self.ud.getSection('storage')
 
         # Always mount swap
         if 'swap' in blkdevmap:

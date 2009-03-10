@@ -12,10 +12,7 @@ class AMIConfigPlugin(AMIPlugin):
     name = 'noip'
 
     def configure(self):
-        try:
-            cfg = self.ud.getSection('noip')
-        except EC2DataRetrievalError:
-            return
+        cfg = self.ud.getSection('noip')
 
         for key in ('username', 'password'):
             if key not in cfg:
