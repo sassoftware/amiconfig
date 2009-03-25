@@ -1,11 +1,12 @@
 #
-# Copyright (c) 2007 rPath, Inc.
+# Copyright (c) 2007-2009 rPath, Inc.
 #
 
 import os
 import sys
 from imputil import imp
 
+from amiconfig.lib import log
 from amiconfig.errors import *
 from amiconfig.constants import *
 from amiconfig.userdata import UserData
@@ -19,20 +20,27 @@ class AMIConfig(object):
         self.plugins = {}
 
     def configure(self):
+        log.info('running')
         results = self._configure()
 
         rc = 0
         for name, (code, result) in results.iteritems():
+            msg = ''
             if code == 1:
-                print >>sys.stderr, ('An error occured while atempting to '
-                                     'retrieve EC2 AMI instance data:\n%s' % result)
+                msg = ('An error occured while atempting to retrieve EC2 AMI '
+                       'instance data:\n%s' % result)
                 rc = 1
             elif code == 2:
-                print >>sys.stderr, ('An unknown exception occured:\n%s' % result)
+                msg = 'An unknown exception occured:\n%s' % result
                 rc = 1
             elif code == 3:
-                print >>sys.stderr, ('Plugin disabled by configuration, not '
-                                     'executing: %s' % name)
+                msg = ('Plugin disabled by configuration, not executing: %s'
+                       % name)
+            log.info('plugin: %s, rc: %s, msg: %s' % (name, code, msg))
+            print >>sys.stderr, msg
+
+        log.info('exiting (%s)' % rc)
+
         return rc
 
     def _configure(self):
@@ -92,10 +100,22 @@ class AMIConfig(object):
         except:
             return
 
+        log.info('loading plugin %s' % plugin)
+
     def _getEnabledPlugins(self):
-        list = DEFAULT_PLUGINS
+        plugins = set(DEFAULT_PLUGINS)
         config = self.ud.getSection('amiconfig')
-        if config and config.has_key('plugins'):
+
+        # add plugins from user data
+        if config and 'plugins' in config:
             for plugin in config['plugins'].split():
-                list.append(plugin.lower())
-        return list
+                plugins.add(plugin.lower())
+
+        # remove plugins from user data
+        if config and 'disabled_plugins' in config:
+            for plugin in config['disabled_plugins'].split():
+                plugin = plugin.lower()
+                if plugin in plugins:
+                    plugins.remove(plugin)
+
+        return list(plugins)

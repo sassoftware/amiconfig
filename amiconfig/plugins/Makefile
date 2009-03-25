@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2004-2008 rPath, Inc.
+# Copyright (c) 2004-2009 rPath, Inc.
 #
 # This program is distributed under the terms of the Common Public License,
 # version 1.0. A copy of this license should have been distributed with this
@@ -31,7 +31,8 @@ python_files = \
 	rmakeserver.py \
 	rootsshkeys.py \
 	rpathplugin.py \
-	storage.py
+	storage.py \
+	disablesshpasswdauth.py
 
 extra_files = \
 	Makefile

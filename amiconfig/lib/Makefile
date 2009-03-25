@@ -20,7 +20,8 @@ python_files = \
 	daemon.py \
 	__init__.py \
 	spacedaemon.py \
-	util.py
+	util.py \
+	log.py
 
 extra_files = \
 	Makefile
