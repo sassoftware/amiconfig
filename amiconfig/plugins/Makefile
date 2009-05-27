@@ -31,6 +31,7 @@ python_files = \
 	rmakeserver.py \
 	rootsshkeys.py \
 	rpathplugin.py \
+	sfcbclient.py \
 	storage.py \
 	disablesshpasswdauth.py
 

@@ -16,6 +16,6 @@ version = "@version@"
 PLUGIN_PATH = [ '@amiconfigdir@/plugins',
                 '@libdir@/amiconfig/plugins' ]
 
-# List of plugins to always load and run. You can't turn these off, be carefull
+# List of plugins to always load and run. You can't turn these off, be careful
 # about adding more.
-DEFAULT_PLUGINS = [ 'rootsshkeys' ]
+DEFAULT_PLUGINS = [ 'rootsshkeys', 'sfcb-client-setup' ]
