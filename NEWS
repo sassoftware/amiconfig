@@ -1,3 +1,7 @@
+Changes in 0.4.2:
+  o The plugin for deploying x509 certificates now looks for alternate
+    directory locations for sfcb.
+
 Changes in 0.4.1:
   o Added plugin for deploying x509 certificates for sblim-sfcb.
   o Fixed bug that caused disablesshpasswordauth to not be enabled by
