@@ -33,8 +33,24 @@ class AMIConfigPlugin(AMIPlugin):
         except:
             # Malformed base64 data. We ignore it.
             return
-        certsDir = os.path.join(os.sep, "etc", "sfcb", "clients")
+        sfcbConfigDir = self.getSfcbConfigDir()
+        if sfcbConfigDir is None:
+            return
+        certsDir = os.path.join(sfcbConfigDir, "clients")
         certsFileName = os.path.join(certsDir, os.path.basename(x509CertHash))
         # Exceptions are properly displayed by ami.py
         util.mkdirChain(certsDir)
         file(certsFileName, "w").write(x509Cert)
+
+    def getSfcbConfigDir(self):
+        configDirs = [
+            os.path.join(os.sep, "etc", "conary", "sfcb"),
+            os.path.join(os.sep, "etc", "sfcb"),
+        ]
+        for configDir in configDirs:
+            if not os.path.isdir(configDir):
+                continue
+            cfgFilePath = os.path.join(configDir, "sfcb.cfg")
+            if os.path.isfile(cfgFilePath):
+                return configDir
+        return None
