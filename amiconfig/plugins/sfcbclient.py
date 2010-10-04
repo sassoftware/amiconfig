@@ -18,6 +18,14 @@ class AMIConfigPlugin(AMIPlugin):
         if not cfg:
             return
 
+        # Get boot uuid
+        bootUuidField = 'boot-uuid'
+        if bootUuidField in cfg:
+            bootUuid = cfg[bootUuidField]
+            bootUuidFile = "/etc/conary/rpath-tools/boot-uuid"
+            util.mkdirChain(os.path.dirname(bootUuidFile))
+            file(bootUuidFile, "w").write(bootUuid.strip())
+
         # Get the cert name
         certHashField = 'x509-cert-hash'
         certField = 'x509-cert(base64)'
