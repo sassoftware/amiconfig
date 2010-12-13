@@ -1,3 +1,8 @@
+Changes in 0.4.3:
+  o A different test is now being used to determine whether the
+    running system is hosted on EC2.  The previous method won't
+    work for pv-grub-based AMIs.  (PFM-842)
+
 Changes in 0.4.2:
   o The plugin for deploying x509 certificates now looks for alternate
     directory locations for sfcb.
