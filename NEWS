@@ -1,3 +1,6 @@
+Changes in 0.4.4:
+  o Added support for eucalyptus.
+
 Changes in 0.4.3:
   o A different test is now being used to determine whether the
     running system is hosted on EC2.  The previous method won't
