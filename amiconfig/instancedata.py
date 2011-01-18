@@ -27,7 +27,12 @@ class InstanceData:
         except Exception, e:
             raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
         if results.headers.gettype() == 'text/html':
-            raise EC2DataRetrievalError, '%s' % results.read()
+            # Eucalyptus returns text/html and no Server: header
+            # We want to protect ourselves from HTTP servers returning real
+            # HTML, so let's hope at least they're conformant and return a
+            # Server: header
+            if 'server' in results.headers:
+                raise EC2DataRetrievalError, '%s' % results.read()
         return results
 
     def read(self, path):
