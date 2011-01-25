@@ -22,6 +22,7 @@ python_files = \
 	constants.py \
 	errors.py \
 	instancedata.py \
+	metadataservice.py \
 	plugin.py \
 	userdata.py
 

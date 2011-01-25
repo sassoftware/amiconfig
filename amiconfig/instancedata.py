@@ -5,6 +5,7 @@
 import socket
 import urllib
 
+from amiconfig import metadataservice
 from amiconfig.errors import *
 from amiconfig.constants import version
 
@@ -18,7 +19,7 @@ class InstanceData:
     apiversion = '2007-12-15'
 
     def __init__(self):
-        self.urlbase = 'http://169.254.169.254'
+        self.urlbase = 'http://%s' % metadataservice.MetadataService.SERVICE_IP
 
     def open(self, path):
         try:

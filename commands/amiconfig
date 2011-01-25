@@ -1,19 +1,36 @@
 #!/usr/bin/python
 #
-# Copyright (c) 2007-2008 rPath, Inc.
+# Copyright (c) 2007-2011 rPath, Inc.
 #
 
 import sys
-from amiconfig import AMIConfig
+from optparse import OptionParser, Option
 
-if len(sys.argv) == 2 and sys.argv[1] == '--debug':
-    debug = True
-else:
-    debug = False
+optionsTable = [
+    Option('--debug', action="store_true",
+        help="Run in debugging mode"),
+    Option('--probe', action="store_true",
+        help="Probe if the metadata service is available"),
+]
+optparser = OptionParser(option_list=optionsTable)
+options, args = optparser.parse_args()
+
+if options.probe:
+    try:
+        from amiconfig import metadataservice
+    except ImportError, e:
+        sys.stderr.write("Unable to import amiconfig module: %s\n" % (e, ))
+        sys.exit(10)
+    canConnect = metadataservice.MetadataService.canConnect()
+    messages = [ "not found", "found" ]
+    sys.stderr.write("Metadata service: %s\n" % messages[canConnect])
+    sys.exit(not canConnect)
+
+from amiconfig import AMIConfig
 
 try:
     from conary.lib import util
-    sys.excepthook = util.genExcepthook(debug=debug)
+    sys.excepthook = util.genExcepthook(debug=options.debug)
 except ImportError:
     pass
 
@@ -23,5 +40,5 @@ clog.setVerbosity(clog.DEBUG)
 clog.syslog = log.info
 clog.debug = log.info
 
-amiConfig = AMIConfig(debug=debug)
+amiConfig = AMIConfig(debug=options.debug)
 sys.exit(amiConfig.configure())

@@ -1,3 +1,9 @@
+Changes in 0.5.0:
+  o Probing for the metadata service is now in python.
+  o The startup script has been changed to run
+    /sbin/amiconfig --probe
+  o optparse support.
+
 Changes in 0.4.4:
   o Added support for eucalyptus.
 

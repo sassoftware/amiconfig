@@ -21,24 +21,15 @@
 
 RETVAL=0
 
-# Are we running in EC2? 
-# If so, the IP of the metadata service will be pingable, and all
-# IPs appear to have the same hwaddr, so check that, too.
-METADATA_SERVICE=169.254.169.254
-reply=$(arping -c 1 ${METADATA_SERVICE} | grep "\[.*\]")
-[ -z "$reply" ] && exit 0
-echo $reply | grep -q FE:FF:FF:FF:FF:FF || {
-    # Not Amazon EC2. Maybe Eucalyptus?
-    /sbin/ip -oneline link | grep -iq "ether d0:0d:" || exit 0
-}
-
 AMICONFIG="/usr/sbin/amiconfig"
 AMILOCK="/var/lock/subsys/amiconfig"
 AMISETUP="/etc/sysconfig/amiconfig"
 
+[ -f $AMICONFIG ] && [ -x $AMICONFIG ] || exit 1
+$AMICONFIG --probe 2>/dev/null || exit $?
+
 [ -f $AMISETUP ] && . $AMISETUP
 [ -e $AMILOCK ] && exit 0
-[ -f $AMICONFIG ] && [ -x $AMICONFIG ] || exit 1
 
 start() {
     # Retreive the credentials from relevant sources.
