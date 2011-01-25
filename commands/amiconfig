@@ -21,9 +21,8 @@ if options.probe:
     except ImportError, e:
         sys.stderr.write("Unable to import amiconfig module: %s\n" % (e, ))
         sys.exit(10)
-    canConnect = metadataservice.MetadataService.canConnect()
-    messages = [ "not found", "found" ]
-    sys.stderr.write("Metadata service: %s\n" % messages[canConnect])
+    ms = metadataservice.MetadataService(debug=options.debug)
+    canConnect = ms.canConnect()
     sys.exit(not canConnect)
 
 from amiconfig import AMIConfig
