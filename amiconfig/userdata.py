@@ -2,9 +2,11 @@
 # Copyright (c) 2007 rPath, Inc.
 #
 
+import os
 from ConfigParser import ConfigParser, RawConfigParser
 
 from amiconfig.errors import *
+from amiconfig import constants
 
 class INIFileStub:
     def __init__(self, contents, name=None):
@@ -41,7 +43,7 @@ class INIFileStub:
             self.__pos = i
 
 class UserData(ConfigParser):
-    def __init__(self, id):
+    def __init__(self, id, cfgfn=constants.CONFIG_FILE):
         ConfigParser.__init__(self)
         try:
             userData = id.getUserData()
@@ -49,6 +51,12 @@ class UserData(ConfigParser):
             userData = ''
         self.fd = INIFileStub(userData, name='EC2UserData')
         self.fd.sanitize()
+
+        # Load local config data before user data so that user data
+        # takes priority
+        if os.path.exists(cfgfn):
+            self.readfp(open(cfgfn))
+
         self.readfp(self.fd)
 
     # Returns a section as a dict.
