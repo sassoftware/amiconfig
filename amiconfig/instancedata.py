@@ -4,6 +4,7 @@
 
 import socket
 import urllib
+import os
 
 from amiconfig import metadataservice
 from amiconfig.errors import *
@@ -16,7 +17,7 @@ urllib._urlopener = URLOpener()
 
 
 class InstanceData:
-    apiversion = '2007-12-15'
+    apiversion = metadataservice.MetadataService.APIVERSION
 
     def __init__(self):
         self.urlbase = 'http://%s' % metadataservice.MetadataService.SERVICE_IP

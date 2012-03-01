@@ -13,18 +13,15 @@
 #
 
 import logging
-import re
 import os
 import subprocess
+import urllib2
+import socket
 
 class MetadataService(object):
+    APIVERSION = '2007-12-15'
     SERVICE_IP = '169.254.169.254'
     LOGGING_NAME = "amiconfig.metadataservice"
-    arpingMacAddr = re.compile(r"^(?P<leading>[^\[]*\[)(?P<macaddr>[^\]]*)(?P<tail>\].*)$",
-        re.MULTILINE | re.DOTALL)
-    ipMacAddr = re.compile("^(?P<leading>.*ether )(?P<macaddr>[^ ]*)(?P<tail> .*)$")
-    arpingPath = '/usr/sbin/arping'
-    ipPath = '/sbin/ip'
 
     def __init__(self, debug=False):
         logger = self.getLogger((debug and logging.DEBUG) or logging.WARN)
@@ -33,45 +30,21 @@ class MetadataService(object):
     def setLogger(self, logger):
         self.log = logger
 
-    def canConnect(self):
-        if not (os.path.exists(self.arpingPath) and os.path.exists(self.ipPath)):
-            self.log.debug("Could not find %s or %s",
-                self.arpingPath, self.ipPath)
-            return False
-        arping = subprocess.Popen([self.arpingPath, '-c', '1', self.SERVICE_IP],
-            stdout=subprocess.PIPE)
-        stdout, stderr = arping.communicate()
-        mobj = self.arpingMacAddr.match(stdout)
-        if mobj is None:
-            self.log.debug("Metadata service %s not responding",
-                self.SERVICE_IP)
-            return False
-        macAddr = mobj.groupdict()['macaddr'].upper()
-        if macAddr == 'FE:FF:FF:FF:FF:FF':
-            # Running in Amazon EC2
-            self.log.debug("Metadata service %s [%s]; running in Amazon EC2",
-                self.SERVICE_IP, macAddr)
-            return True
-        # Check for eucalyptus
-        iplink = subprocess.Popen([self.ipPath, '-oneline', 'link'],
-            stdout=subprocess.PIPE)
-        found = False
-        for line in iplink.stdout:
-            mobj = self.ipMacAddr.match(line.strip())
-            if mobj is None:
-                continue
-            localMacAddr = mobj.groupdict()['macaddr'].upper()
-            if localMacAddr.startswith('D0:0D:'):
-                iplink.wait()
-                found = True
-                self.log.debug("Metadata service %s [%s]; interface [%s]; "
-                    "running in Eucalyptus",
-                        self.SERVICE_IP, macAddr, localMacAddr)
-                break
-        iplink.wait()
-        if not found:
-            self.log.debug("Metadata service %s found; unknown", self.SERVICE_IP)
-        return found
+    def canConnect(self):         
+        url = "http://%s/%s" % (self.SERVICE_IP, self.APIVERSION)
+        try:
+            dt = socket.getdefaulttimeout()
+            socket.setdefaulttimeout(3)
+            handle = urllib2.urlopen(url)
+            socket.setdefaulttimeout(dt)
+            ec2_index = handle.read()
+            if ("user-data" in ec2_index) and ("meta-data" in ec2_index):
+                return True
+            else:
+                self.log.debug("Didn't find proper ec2 index at %s" % url)
+        except Exception, e:
+            self.log.debug("While opening %s: %s" % (url, e))
+        return False
 
     @classmethod
     def getLogger(cls, level):
