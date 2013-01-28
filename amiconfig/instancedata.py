@@ -27,6 +27,8 @@ class InstanceData:
                                                    self.apiversion, path))
         except Exception, e:
             raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
+        if results.getcode() != 200:
+            raise EC2DataRetrievalError, '[%s] %s' % (results.getcode(), results.geturl())
         if results.headers.gettype() == 'text/html':
             # Eucalyptus returns text/html and no Server: header
             # We want to protect ourselves from HTTP servers returning real
