@@ -10,13 +10,34 @@ from amiconfig.errors import *
 from amiconfig.constants import version
 
 class URLOpener(urllib.FancyURLopener):
-    version = 'AMIConfig/%s elliot@rpath.com' % version
+    version = 'AMIConfig/%s elliot.peele@sas.com' % version
 
 urllib._urlopener = URLOpener()
 
+class InstanceIdentityDocument(object):
+    """
+    A dictionary-like object that can use its keys as selectors.
+
+    Usage:
+
+    iid = InstanceIdentityDocument(dict(a=1, b=2))
+    print iid['a'], iid['b']
+    print iid.a, iid.b
+    """
+    def __init__(self, docDict):
+        self.__dict__.update(docDict)
+
+    def __getitem__(self, name):
+        return self.__dict__.__getitem__(name)
+
+    def __setitem__(self, name, value):
+        return self.__dict__.__setitem__(name, value)
+
+    def __repr__(self):
+        return repr(self.__dict__)
 
 class InstanceData:
-    apiversion = '2007-12-15'
+    apiversion = '2012-01-12'
 
     def __init__(self):
         self.urlbase = 'http://%s' % metadataservice.MetadataService.SERVICE_IP
@@ -79,6 +100,10 @@ class InstanceData:
         for group in self.open('meta-data/security-groups'):
             list.append(group.strip())
         return list
+
+    def getInstanceIdentityDocument(self):
+        import json
+        return InstanceIdentityDocument(json.load(self.open('dynamic/instance-identity/document')))
 
     def getKeyIdList(self):
         list = []
