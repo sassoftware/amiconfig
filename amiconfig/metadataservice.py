@@ -19,7 +19,7 @@ import urllib2
 import socket
 
 class MetadataService(object):
-    APIVERSION = '2007-12-15'
+    APIVERSION = '2012-01-12'
     SERVICE_IP = '169.254.169.254'
     LOGGING_NAME = "amiconfig.metadataservice"
 

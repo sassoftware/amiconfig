@@ -11,10 +11,31 @@ from amiconfig.errors import *
 from amiconfig.constants import version
 
 class URLOpener(urllib.FancyURLopener):
-    version = 'AMIConfig/%s elliot@rpath.com' % version
+    version = 'AMIConfig/%s elliot.peele@sas.com' % version
 
 urllib._urlopener = URLOpener()
 
+class InstanceIdentityDocument(object):
+    """
+    A dictionary-like object that can use its keys as selectors.
+
+    Usage:
+
+    iid = InstanceIdentityDocument(dict(a=1, b=2))
+    print iid['a'], iid['b']
+    print iid.a, iid.b
+    """
+    def __init__(self, docDict):
+        self.__dict__.update(docDict)
+
+    def __getitem__(self, name):
+        return self.__dict__.__getitem__(name)
+
+    def __setitem__(self, name, value):
+        return self.__dict__.__setitem__(name, value)
+
+    def __repr__(self):
+        return repr(self.__dict__)
 
 class InstanceData:
     apiversion = metadataservice.MetadataService.APIVERSION
@@ -28,6 +49,8 @@ class InstanceData:
                                                    self.apiversion, path))
         except Exception, e:
             raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
+        if results.getcode() != 200:
+            raise EC2DataRetrievalError, '[%s] %s' % (results.getcode(), results.geturl())
         if results.headers.gettype() == 'text/html':
             # Eucalyptus returns text/html and no Server: header
             # We want to protect ourselves from HTTP servers returning real
@@ -78,6 +101,10 @@ class InstanceData:
         for group in self.open('meta-data/security-groups'):
             list.append(group.strip())
         return list
+
+    def getInstanceIdentityDocument(self):
+        import json
+        return InstanceIdentityDocument(json.load(self.open('dynamic/instance-identity/document')))
 
     def getKeyIdList(self):
         list = []
