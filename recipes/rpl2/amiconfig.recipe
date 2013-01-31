@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2007-2009 rPath, Inc.
+# This file is distributed under the terms of the MIT License.
+# A copy is available at http://www.rpath.com/permanent/mit-license.html
+#
+
+class AMIConfig(BuildPackageRecipe):
+    name = 'amiconfig'
+    version = '0.4.3'
+
+    buildRequires = [ 'dnspython:python',
+                      'initscripts:runtime' ]
+
+    def setup(r):
+        r.addMercurialSnapshot('http://hg.rpath.com/amiconfig',
+            tag='%(name)s-%(version)s')
+        r.Make()
+        r.MakeInstall()
+        r.TagSpec('initscript', '%(initdir)s/.*')
