@@ -14,7 +14,14 @@ class AMIConfig(BuildPackageRecipe, RpathPackageRecipe):
     def setup(r):
         r.rpathSetup()
         r.addMercurialSnapshot('http://hg.rpath.com/amiconfig', tag='%(name)s-%(version)s')
- 
+
+        r.macros.pyroot = '/usr/conary'
+        r.macros.includedir = '%(pyroot)s/include'
+        r.macros.datadir = '%(pyroot)s/share'
+        r.macros.bindir = '/usr/conary/bin'
+        r.macros.sbindir = '/usr/conary/sbin'
+        r.macros.pybin = '%(pyroot)s/bin/python%(pyver)s'
+
         # Setup to use our python-conary package
         r.Replace('^PYTHON =', '^PYTHON ?=', 'Make.rules')
 
