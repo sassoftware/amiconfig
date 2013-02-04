@@ -6,7 +6,7 @@
 
 class AMIConfig(BuildPackageRecipe):
     name = 'amiconfig'
-    version = '0.4.3'
+    version = '0.6.0'
 
     buildRequires = [ 'dnspython:python',
                       'initscripts:runtime' ]

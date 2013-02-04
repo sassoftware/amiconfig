@@ -3,6 +3,8 @@ Changes in 0.6.0:
   o Added getInstanceIdentityDocument()
   o Response errors from urllib are raised as exceptions if the metadata
     server could not be contacted.
+  o Merged Tomas Karasek's pull request for the improved test on EC2 API
+    availability.
 
 Changes in 0.5.0:
   o Probing for the metadata service is now in python.

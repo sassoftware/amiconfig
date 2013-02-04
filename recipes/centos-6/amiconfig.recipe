@@ -7,7 +7,7 @@
 loadSuperClass('rpathpackage')
 class AMIConfig(BuildPackageRecipe, RpathPackageRecipe):
     name = 'amiconfig'
-    version = '0.5.1'
+    version = '0.6.0'
 
     buildRequires = [ 'python-conary:devel' ]
 
