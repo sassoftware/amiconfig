@@ -8,7 +8,7 @@ class AmiconfigTest(TestPackageRecipe):
     name = 'amiconfig-test'
     version = '0.1'
 
-    Flags.coverage = True
+    Flags.coverage = False
     # Don't inherit Flags.test from conary's test suite
     Flags.test = True
 
