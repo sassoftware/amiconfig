@@ -30,7 +30,7 @@ class Suite(suite.TestSuite):
 
     def getCoverageDirs(self, handler, environ):
         import amiconfig
-        return [ os.path.dirname(amiconfig.__file__) ]
+        return [ amiconfig ]
 
 _s = Suite()
 setup = _s.setup
