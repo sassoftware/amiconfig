@@ -3,7 +3,6 @@
 # All rights reserved.
 #
 
-loadSuperClass('conary-test')
 loadSuperClass('testpackage')
 class AmiconfigTest(TestPackageRecipe):
     name = 'amiconfig-test'
@@ -19,9 +18,8 @@ class AmiconfigTest(TestPackageRecipe):
     testsuite = "amiconfig_test/testsuite.py"
 
     buildRequires = [
-        'conary-test:python',
         'amiconfig:python',
-    ] + ConaryTest.buildRequires
+    ]
 
     def setupSource(r):
         r.addMercurialSnapshot()
