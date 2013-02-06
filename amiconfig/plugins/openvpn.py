@@ -5,7 +5,6 @@
 import os
 
 from amiconfig.lib import util
-from amiconfig.errors import *
 from amiconfig.plugin import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):

@@ -4,7 +4,6 @@
 
 import base64
 import os
-import sys
 
 from conary.lib import util
 from amiconfig.plugin import AMIPlugin
@@ -17,14 +16,6 @@ class AMIConfigPlugin(AMIPlugin):
         cfg = self.ud.getSection(self._sectionName)
         if not cfg:
             return
-
-        # Get boot uuid
-        bootUuidField = 'boot-uuid'
-        if bootUuidField in cfg:
-            bootUuid = cfg[bootUuidField]
-            bootUuidFile = "/etc/conary/rpath-tools/boot-uuid"
-            util.mkdirChain(os.path.dirname(bootUuidFile))
-            file(bootUuidFile, "w").write(bootUuid.strip())
 
         # Get the cert name
         certHashField = 'x509-cert-hash'
@@ -52,8 +43,8 @@ class AMIConfigPlugin(AMIPlugin):
 
     def getSfcbConfigDir(self):
         configDirs = [
-            os.path.join(os.sep, "etc", "conary", "sfcb"),
-            os.path.join(os.sep, "etc", "sfcb"),
+            os.path.join(os.sep, self.id.rootDir, "etc", "conary", "sfcb"),
+            os.path.join(os.sep, self.id.rootDir, "etc", "sfcb"),
         ]
         for configDir in configDirs:
             if not os.path.isdir(configDir):

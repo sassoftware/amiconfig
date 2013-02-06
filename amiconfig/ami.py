@@ -7,20 +7,29 @@ import sys
 from imputil import imp
 
 from amiconfig.lib import log
-from amiconfig.errors import *
-from amiconfig.constants import *
+from amiconfig import constants
+from amiconfig import errors
 from amiconfig.userdata import UserData
 from amiconfig.instancedata import InstanceData
+from amiconfig.metadataservice import LoggedService
 
-class AMIConfig(object):
+class AMIConfig(LoggedService):
+    InstanceDataFactory = InstanceData
+    UserDataFactory = UserData
+
     def __init__(self, debug=False):
+        super(AMIConfig, self).__init__()
         self.debug = debug
-        self.id = InstanceData()
-        self.ud = UserData(self.id)
+        self.id = self.InstanceDataFactory()
+        self.ud = self.UserDataFactory(self.id)
         self.plugins = {}
 
+    def _info(self, *args, **kwargs):
+        self.log.info(*args, **kwargs)
+        self.id.log.info(*args, **kwargs)
+
     def configure(self):
-        log.info('running')
+        self._info('running')
         results = self._configure()
 
         rc = 0
@@ -36,10 +45,9 @@ class AMIConfig(object):
             elif code == 3:
                 msg = ('Plugin disabled by configuration, not executing: %s'
                        % name)
-            log.info('plugin: %s, rc: %s, msg: %s' % (name, code, msg))
-            print >>sys.stderr, msg
+            self._info('plugin: %s, rc: %s, msg: %s' % (name, code, msg))
 
-        log.info('exiting (%s)' % rc)
+        self._info('exiting (%s)' % rc)
 
         return rc
 
@@ -51,20 +59,23 @@ class AMIConfig(object):
             if name in enabledPlugins:
                 try:
                     obj = apply(plugin, (self.id, self.ud))
+                    self.log.debug("Running plugin %s", name)
                     obj.configure()
                     results[name] = (0, '')
-                except EC2DataRetrievalError, e:
+                except errors.EC2DataRetrievalError, e:
                     results[name] = (1, str(e))
                 except Exception, e:
                     results[name] = (2, str(e))
                     if self.debug:
                         raise
             else:
+                self.log.debug("Plugin not enabled: %s", name)
                 results[name] = (3, '')
+        self.log.debug("Results: %s", results)
         return results
 
     def _loadPlugins(self):
-        for dir in PLUGIN_PATH:
+        for dir in constants.PLUGIN_PATH:
             if not os.path.isdir(dir):
                 continue
             sys.path.append(dir)
@@ -100,10 +111,10 @@ class AMIConfig(object):
         except:
             return
 
-        log.info('loading plugin %s' % plugin)
+        self._info('loading plugin %s' % plugin)
 
     def _getEnabledPlugins(self):
-        plugins = set(DEFAULT_PLUGINS)
+        plugins = set(constants.DEFAULT_PLUGINS)
         config = self.ud.getSection('amiconfig')
 
         # add plugins from user data
@@ -118,4 +129,4 @@ class AMIConfig(object):
                 if plugin in plugins:
                     plugins.remove(plugin)
 
-        return list(plugins)
+        return plugins

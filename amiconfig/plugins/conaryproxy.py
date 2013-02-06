@@ -2,7 +2,6 @@
 # Copyright (c) 2007 rPath, Inc.
 #
 
-from amiconfig.errors import *
 from rpathplugin import rPathPlugin
 
 class AMIConfigPlugin(rPathPlugin):

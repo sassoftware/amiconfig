@@ -3,6 +3,7 @@
 # Copyright (c) 2007-2011 rPath, Inc.
 #
 
+import logging
 import sys
 from optparse import OptionParser, Option
 
@@ -15,13 +16,18 @@ optionsTable = [
 optparser = OptionParser(option_list=optionsTable)
 options, args = optparser.parse_args()
 
+logging.basicConfig(
+        level=(options.debug and logging.DEBUG) or logging.WARNING,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logger = logging.getLogger()
+
 if options.probe:
     try:
         from amiconfig import metadataservice
     except ImportError, e:
-        sys.stderr.write("Unable to import amiconfig module: %s\n" % (e, ))
+        logger.error("Unable to import amiconfig module: %s", e)
         sys.exit(10)
-    ms = metadataservice.MetadataService(debug=options.debug)
+    ms = metadataservice.MetadataService()
     canConnect = ms.canConnect()
     sys.exit(not canConnect)
 

@@ -2,10 +2,13 @@
 # Copyright (c) 2007 rPath, Inc.
 #
 
-class AMIPlugin(object):
+from amiconfig import metadataservice
+
+class AMIPlugin(metadataservice.LoggedService):
     name = None
 
     def __init__(self, id, ud):
+        super(AMIPlugin, self).__init__()
         self.id = id
         self.ud = ud
 

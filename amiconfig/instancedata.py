@@ -2,18 +2,10 @@
 # Copyright (c) 2007-2008 rPath, Inc.
 #
 
-import socket
-import urllib
-import os
+import urllib2
 
 from amiconfig import metadataservice
-from amiconfig.errors import *
-from amiconfig.constants import version
-
-class URLOpener(urllib.FancyURLopener):
-    version = 'AMIConfig/%s elliot.peele@sas.com' % version
-
-urllib._urlopener = URLOpener()
+from amiconfig import errors
 
 class InstanceIdentityDocument(object):
     """
@@ -37,27 +29,30 @@ class InstanceIdentityDocument(object):
     def __repr__(self):
         return repr(self.__dict__)
 
-class InstanceData:
-    apiversion = metadataservice.MetadataService.APIVERSION
-
-    def __init__(self):
-        self.urlbase = 'http://%s' % metadataservice.MetadataService.SERVICE_IP
+class InstanceData(metadataservice.MetadataService):
+    def __init__(self, rootDir='/'):
+        super(InstanceData, self).__init__()
+        self.rootDir = rootDir
 
     def open(self, path):
         try:
-            results = urllib.urlopen('%s/%s/%s' % (self.urlbase,
-                                                   self.apiversion, path))
-        except Exception, e:
-            raise EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
+            results = self._open(path)
+        except IOError, e:
+            # URLError is a subclass of IOError
+            raise errors.EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
+        except urllib2.HTTPError, results:
+            # fall through
+            pass
         if results.getcode() != 200:
-            raise EC2DataRetrievalError, '[%s] %s' % (results.getcode(), results.geturl())
-        if results.headers.gettype() == 'text/html':
+            raise errors.EC2DataRetrievalError, '[%s] %s: %s' % (
+                    results.getcode(), results.geturl(), results.msg)
+        if results.headers.type == 'text/html':
             # Eucalyptus returns text/html and no Server: header
             # We want to protect ourselves from HTTP servers returning real
             # HTML, so let's hope at least they're conformant and return a
             # Server: header
             if 'server' in results.headers:
-                raise EC2DataRetrievalError, '%s' % results.read()
+                raise errors.EC2DataRetrievalError, '%s' % results.read()
         return results
 
     def read(self, path):

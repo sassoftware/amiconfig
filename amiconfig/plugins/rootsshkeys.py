@@ -3,8 +3,9 @@
 #
 
 import os
-from amiconfig.errors import *
+from amiconfig import errors
 from amiconfig.plugin import AMIPlugin
+from conary.lib import util
 
 class AMIConfigPlugin(AMIPlugin):
     name = 'rootsshkeys'
@@ -12,17 +13,15 @@ class AMIConfigPlugin(AMIPlugin):
     def configure(self):
         try:
             key = self.id.getSSHKey()
-        except EC2DataRetrievalError:
+        except errors.EC2DataRetrievalError:
             # no key available
             return
 
-        sshkeydir = '/root/.ssh/'
+        sshkeydir = os.path.join(self.id.rootDir, 'root/.ssh')
         sshdirperms = 0700
         # make ssh directory if it doesn't exist
-        if not os.path.exists(sshkeydir):
-            os.mkdir(sshkeydir)
-            os.chmod(sshkeydir, sshdirperms)
-
+        util.mkdirChain(sshkeydir)
+        os.chmod(sshkeydir, sshdirperms)
 
         # ensure that key is not already in the authorized_keys file
         authkeysfile = '%s/authorized_keys' % sshkeydir

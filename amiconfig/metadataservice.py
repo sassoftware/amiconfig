@@ -13,45 +13,60 @@
 #
 
 import logging
-import os
-import subprocess
 import urllib2
 import socket
 
-class MetadataService(object):
-    APIVERSION = '2012-01-12'
-    SERVICE_IP = '169.254.169.254'
-    LOGGING_NAME = "amiconfig.metadataservice"
-
-    def __init__(self, debug=False):
-        logger = self.getLogger((debug and logging.DEBUG) or logging.WARN)
+class LoggedService(object):
+    def __init__(self):
+        logger = self.getLogger()
         self.setLogger(logger)
 
     def setLogger(self, logger):
         self.log = logger
 
-    def canConnect(self):         
-        url = "http://%s/%s" % (self.SERVICE_IP, self.APIVERSION)
+    @classmethod
+    def getLogger(cls):
+        loggerName = "%s.%s" % (cls.__module__, cls.__name__)
+        logger = logging.getLogger(loggerName)
+        return logger
+
+    def setLogHandler(self, level, fmt=None):
+        handler = logging.StreamHandler()
+        if fmt is None:
+            fmt = "%(asctime)s - %(message)s"
+        formatter = logging.Formatter(fmt)
+        handler.setFormatter(formatter)
+        self.log.addHandler(handler)
+
+class MetadataService(LoggedService):
+    API_VERSION = '2012-01-12'
+    SERVICE_IP = '169.254.169.254'
+
+    def canConnect(self):
+        url = "http://%s/%s" % (self.SERVICE_IP, self.API_VERSION)
         try:
-            dt = socket.getdefaulttimeout()
-            socket.setdefaulttimeout(3)
-            handle = urllib2.urlopen(url)
-            socket.setdefaulttimeout(dt)
+            handle = self._open(None)
             ec2_index = handle.read()
             if ("user-data" in ec2_index) and ("meta-data" in ec2_index):
                 return True
-            else:
-                self.log.debug("Didn't find proper ec2 index at %s" % url)
+            self.log.debug("Didn't find proper ec2 index at %s" % url)
         except Exception, e:
             self.log.debug("While opening %s: %s" % (url, e))
         return False
 
+    def _open(self, path):
+        url = self._makeUrl(path)
+        self.log.debug("Opening %s", url)
+        dt = socket.getdefaulttimeout()
+        try:
+            socket.setdefaulttimeout(3)
+            return urllib2.urlopen(url)
+        finally:
+            socket.setdefaulttimeout(dt)
+
     @classmethod
-    def getLogger(cls, level):
-        logger = logging.getLogger(cls.LOGGING_NAME)
-        logger.setLevel(level)
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter("%(asctime)s - %(message)s")
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        return logger
+    def _makeUrl(cls, path):
+        urlComps = [ "http://%s" % cls.SERVICE_IP, cls.API_VERSION, path ]
+        # If path is empty or None or /, stop at API_VERSION
+        return '/'.join(x.strip('/') for x in urlComps if (x and x.strip('/')))
+

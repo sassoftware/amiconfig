@@ -5,7 +5,7 @@
 import os
 from ConfigParser import ConfigParser, RawConfigParser
 
-from amiconfig.errors import *
+from amiconfig import errors
 from amiconfig import constants
 
 class INIFileStub:
@@ -45,22 +45,31 @@ class INIFileStub:
 class UserData(ConfigParser):
     def __init__(self, id, cfgfn=constants.CONFIG_FILE):
         ConfigParser.__init__(self)
+        self._instanceData = id
+        self._cfgfn = cfgfn
+        self.fd = None
+        # Instantiate the object lazily, so only when we request a
+        # section we read over the network
+
+    def _init(self):
         try:
-            userData = id.getUserData()
-        except EC2DataRetrievalError:
+            userData = self._instanceData.getUserData()
+        except errors.EC2DataRetrievalError:
             userData = ''
         self.fd = INIFileStub(userData, name='EC2UserData')
         self.fd.sanitize()
 
         # Load local config data before user data so that user data
         # takes priority
-        if os.path.exists(cfgfn):
-            self.readfp(open(cfgfn))
+        if os.path.exists(self._cfgfn):
+            self.readfp(open(self._cfgfn))
 
         self.readfp(self.fd)
 
     # Returns a section as a dict.
     def getSection(self, name, lower=True):
+        if self.fd is None:
+            self._init()
         if lower:
             for section in self.sections():
                 if name.lower() == section.lower():

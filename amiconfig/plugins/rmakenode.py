@@ -4,7 +4,6 @@
 
 import os
 
-from amiconfig.errors import *
 from rmakeplugin import rMakePlugin
 
 class AMIConfigPlugin(rMakePlugin):

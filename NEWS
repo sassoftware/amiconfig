@@ -5,6 +5,18 @@ Changes in 0.6.0:
     server could not be contacted.
   o Merged Tomas Karasek's pull request for the improved test on EC2 API
     availability.
+  o Added testsuite and reworked internals to simplify testing
+  o Unified MetadataService and InstanceData functionality by making the
+    latter a subclass of the former
+  o Moved to urllib2 (away from urllib)
+  o Improved logging
+  o sfcb-client-setup is no longer enabled by default (but may be enabled via
+    an [amiconfig] section in the user data).
+  o Moved boot-uuid from from the sfcb config section and into the
+    rpath-tools section
+  o Added zone-addresses and conary-proxies
+  o All plugins are pyflakes-clean
+  o Cleaned up namespace in amiconfig/__init__.py (import * was removed)
 
 Changes in 0.5.0:
   o Probing for the metadata service is now in python.

@@ -2,7 +2,7 @@
 # Copyright (c) 2008 rPath Inc.
 #
 
-from amiconfig.errors import *
+from amiconfig import errors
 from amiconfig.lib import util
 from amiconfig.plugin import AMIPlugin
 
@@ -16,7 +16,7 @@ class AMIConfigPlugin(AMIPlugin):
         else:
             try:
                 hostname = self.id.getLocalHostname()
-            except EC2DataRetrievalError:
+            except errors.EC2DataRetrievalError:
                 return
 
         util.call(['hostname', hostname])

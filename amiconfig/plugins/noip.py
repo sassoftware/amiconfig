@@ -3,9 +3,7 @@
 #
 
 import urllib
-import urlparse
 
-from amiconfig.errors import *
 from amiconfig.plugin import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):
@@ -38,4 +36,4 @@ class AMIConfigPlugin(AMIPlugin):
 
         urlfh = urllib.urlopen(url)
 
-        ret = urlfh.read()
+        urlfh.read()

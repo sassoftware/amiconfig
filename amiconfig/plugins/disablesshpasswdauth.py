@@ -18,9 +18,9 @@ class AMIConfigPlugin(AMIPlugin):
     name = 'disablesshpasswdauth'
 
     def configure(self):
-        conffn = '/etc/ssh/sshd_config'
+        conffn = os.path.join(self.id.rootDir, 'etc/ssh/sshd_config')
 
-        tmpfd, tmpfn = tempfile.mkstemp()
+        tmpfd, tmpfn = tempfile.mkstemp(dir=os.path.dirname(conffn))
         tmpfh = os.fdopen(tmpfd, 'w')
 
         regex = re.compile('.*PasswordAuthentication (yes|no).*')

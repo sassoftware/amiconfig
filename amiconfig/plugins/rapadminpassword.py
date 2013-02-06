@@ -3,8 +3,6 @@
 #
 
 import os
-import sys
-from amiconfig.errors import *
 from rpathplugin import rPathPlugin
 
 class AMIConfigPlugin(rPathPlugin):

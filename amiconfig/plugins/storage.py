@@ -5,9 +5,8 @@
 import os
 import math
 
-from amiconfig.errors import *
-from amiconfig.lib import util
-from amiconfig.lib import spacedaemon
+from amiconfig import errors
+from amiconfig.lib import util, spacedaemon
 from amiconfig.plugin import AMIPlugin
 
 class AMIConfigPlugin(AMIPlugin):
@@ -26,7 +25,7 @@ class AMIConfigPlugin(AMIPlugin):
 
         try:
             blkdevmap = self.id.getBlockDeviceMapping()
-        except EC2DataRetrievalError:
+        except errors.EC2DataRetrievalError:
             return
 
         cfg = self.ud.getSection('storage')

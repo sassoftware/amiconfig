@@ -19,6 +19,6 @@ PLUGIN_PATH = [ '@amiconfigdir@/plugins',
 
 # List of plugins to always load and run. You can't turn these off, be careful
 # about adding more.
-DEFAULT_PLUGINS = [ 'rootsshkeys', 'disablesshpasswdauth', 'sfcb-client-setup' ]
+DEFAULT_PLUGINS = [ 'rootsshkeys', 'disablesshpasswdauth', ]
 
 CONFIG_FILE = '/etc/amiconfig.conf'

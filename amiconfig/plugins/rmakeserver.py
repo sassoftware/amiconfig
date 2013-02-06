@@ -2,8 +2,6 @@
 # Copyright (c) 2008 rPath, Inc.
 #
 
-import os
-
 from rmakeplugin import rMakePlugin
 
 class AMIConfigPlugin(rMakePlugin):
