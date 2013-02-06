@@ -23,4 +23,4 @@ class AmiconfigTest(TestPackageRecipe):
 
     def setupSource(r):
         r.addMercurialSnapshot()
-        r.Remove('amiconfig', recurse=True)
+        r.Remove('amiconfig', recursive=True)
