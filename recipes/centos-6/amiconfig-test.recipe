@@ -15,7 +15,7 @@ class AmiconfigTest(TestPackageRecipe):
     # testpackage configuration
     testDir = '.'
 
-    testsuite = "amiconfig_test/testsuite.py"
+    testsuite = "testsuite.py"
 
     buildRequires = [
         'amiconfig:python',
