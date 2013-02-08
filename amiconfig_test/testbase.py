@@ -118,14 +118,6 @@ class BasePluginTest(TestCase):
         defaultPlugins = set(ami.constants.DEFAULT_PLUGINS)
         if self.pluginName in defaultPlugins:
             defaultPlugins.remove(self.pluginName)
-        userData = self._data['user-data']
-        self._data['user-data'] = userData + """
-[amiconfig]
-plugins = %s
-disabled_plugins = %s
-
-%s
-""" % (self.pluginName, ' '.join(defaultPlugins), self.PluginData)
 
         class Log(object):
             _syslog = []
@@ -147,6 +139,16 @@ disabled_plugins = %s
         self.mock(ami, 'log', Log)
 
         self.setUpExtra()
+
+        userData = self._data['user-data']
+        self._data['user-data'] = userData + """
+[amiconfig]
+plugins = %s
+disabled_plugins = %s
+
+%s
+""" % (self.pluginName, ' '.join(defaultPlugins), self.PluginData)
+
         return self.amicfg.configure()
 
     def setUpExtra(self):
