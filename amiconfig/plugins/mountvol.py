@@ -16,6 +16,7 @@
 #
 import os
 import subprocess
+import time
 
 from amiconfig.plugin import AMIPlugin
 from conary.lib import util
@@ -34,11 +35,23 @@ class AMIConfigPlugin(AMIPlugin):
             if not device.startswith('/'):
                 continue
 
-            # ensure the device actually exists
-            if not os.path.exists(device):
-                continue
-
             # ensure mount point exists
             util.mkdirChain(mount_point)
 
+            self._mount_vol(device, mount_point, wait=cfg.get('wait', 0))
+
+    def _mount_vol(self, device, mount_point, wait):
+        """mount ``device`` at ``mount_point``. Wait ``wait`` minutes if the
+        device is not present
+        """
+        count = 0
+        while count < wait:
+            # check if the device exists
+            if not os.path.exists(device):
+                time.sleep(60)
+            else:
+                break
+            count += 1
+
+        if os.path.exists(device):
             subprocess.call(["mount", device, mount_point])

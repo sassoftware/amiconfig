@@ -60,16 +60,13 @@ class PluginTest(testbase.BasePluginTest):
         import subprocess
         self.mock(subprocess, 'call', mockCall)
 
-        #self.mock(self._plugin(), 'subprocess', Subprocess)
-
     def testMount(self):
         """assert that configure() makes the right subprocess call and creates
         any needed directories
         """
-        self.assertEquals(
-            self.calls,
-            [('call', (["mount", self.dev1.name, self.mount1],), {}),
-             ('call', (["mount", self.dev2.name, self.mount2],), {}),
-             ])
+        self.assertEquals(self.calls, [
+            ('call', (["mount", self.dev1.name, self.mount1],), {}),
+            ('call', (["mount", self.dev2.name, self.mount2],), {}),
+            ])
         self.assertTrue(os.path.exists(self.mount1))
         self.assertTrue(os.path.exists(self.mount2))
