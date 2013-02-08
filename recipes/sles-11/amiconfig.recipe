@@ -23,7 +23,7 @@ class AMIConfig(BuildPackageRecipe):
         r.macros.sitepkgs = '%(pypkgs)s/site-packages'
         r.Replace('^PYTHON =', '^PYTHON ?=', 'Make.rules')
 
-        r.Replace('dnsupdate.py', '', 'amiconfig/plugins/Makefile')
+        r.Remove('amiconfig/lib/dnsupdate.py')
         r.Make('libdir=%(libdir)s sitedir=%(sitepkgs)s'
                ' initdir=%(initdir)s PYTHON=%(pybin)s')
         r.MakeInstall('libdir=%(libdir)s sitedir=%(sitepkgs)s'
