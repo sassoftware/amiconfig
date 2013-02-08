@@ -16,12 +16,7 @@ all: subdirs
 
 SUBDIRS=
 
-python_files = \
-	daemon.py \
-	__init__.py \
-	spacedaemon.py \
-	util.py \
-	log.py
+python_files = $(wildcard *.py)
 
 extra_files = \
 	Makefile

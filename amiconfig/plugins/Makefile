@@ -16,24 +16,7 @@ all: subdirs
 
 SUBDIRS=
 
-python_files = \
-	conaryproxy.py \
-	dnsupdate.py \
-	hostname.py \
-	kernelmodules.py \
-	noip.py \
-	openvpn.py \
-	rapadminpassword.py \
-	rapcert.py \
-	raprsakey.py \
-	rmakenode.py \
-	rmakeplugin.py \
-	rmakeserver.py \
-	rootsshkeys.py \
-	rpathplugin.py \
-	sfcbclient.py \
-	storage.py \
-	disablesshpasswdauth.py
+python_files = $(wildcard *.py)
 
 extra_files = \
 	Makefile
