@@ -31,16 +31,15 @@ class PluginTest(testbase.BasePluginTest):
 
     def setUpExtra(self):
         """Mock out subprocess module"""
-        self.dev1 = file(os.path.join(self.workDir, '/tmp/xvdj'), 'w')
-        self.dev2 = file(os.path.join(self.workDir,'/tmp/xvdk'), 'w')
-        self.mount1 = os.path.join(self.workDir,'/tmp/install')
-        self.mount2 = os.path.join(self.workDir,'/tmp/make-this-dir')
+        self.dev1 = os.path.join(self.workDir, 'xvdj')
+        file(self.dev1, 'w')
+
+        self.mount1 = os.path.join(self.workDir,'install')
 
         self.PluginData = """
 [mount-vol]
 %s = %s
-%s = %s
-""" % (self.dev1.name, self.mount1, self.dev2.name, self.mount2)
+""" % (self.dev1, self.mount1)
 
         self.calls = []
         def mockCall(*args, **kwargs):
@@ -54,8 +53,6 @@ class PluginTest(testbase.BasePluginTest):
         any needed directories
         """
         self.assertEquals(self.calls, [
-            ('call', (["mount", self.dev1.name, self.mount1],), {}),
-            ('call', (["mount", self.dev2.name, self.mount2],), {}),
+            ('call', (["mount", self.dev1, self.mount1],), {}),
             ])
         self.assertTrue(os.path.exists(self.mount1))
-        self.assertTrue(os.path.exists(self.mount2))
