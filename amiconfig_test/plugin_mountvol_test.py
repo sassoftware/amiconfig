@@ -27,15 +27,14 @@ import testbase
 
 class PluginTest(testbase.BasePluginTest):
     pluginName = 'mountvol'
-
     PluginData = ""
 
-    def setUp(self):
-        self.dev1 = open('/tmp/xvdj', 'w')
-        self.dev2 = open('/tmp/xvdk', 'w')
-
-        self.mount1 = '/tmp/install'
-        self.mount2 = '/tmp/make-this-dir'
+    def setUpExtra(self):
+        """Mock out subprocess module"""
+        self.dev1 = file(os.path.join(self.workDir, '/tmp/xvdj'), 'w')
+        self.dev2 = file(os.path.join(self.workDir,'/tmp/xvdk'), 'w')
+        self.mount1 = os.path.join(self.workDir,'/tmp/install')
+        self.mount2 = os.path.join(self.workDir,'/tmp/make-this-dir')
 
         self.PluginData = """
 [mount-vol]
@@ -43,25 +42,6 @@ class PluginTest(testbase.BasePluginTest):
 %s = %s
 """ % (self.dev1.name, self.mount1, self.dev2.name, self.mount2)
 
-        super(PluginTest, self).setUp()
-
-    def tearDown(self):
-        if os.path.exists(self.dev1.name):
-            os.unlink(self.dev1.name)
-            self.dev1.close()
-
-        if os.path.exists(self.dev2.name):
-            os.unlink(self.dev2.name)
-            self.dev2.close()
-
-        if os.path.exists(self.mount1):
-            os.rmdir(self.mount1)
-
-        if os.path.exists(self.mount2):
-            os.rmdir(self.mount2)
-
-    def setUpExtra(self):
-        """Mock out subprocess module"""
         self.calls = []
         def mockCall(*args, **kwargs):
             self.calls.append(('call', args, kwargs))
