@@ -37,12 +37,14 @@ class InstanceData(metadataservice.MetadataService):
     def open(self, path):
         try:
             results = self._open(path)
+        except urllib2.HTTPError, results:
+            # fall through. We need to process this before IOError,
+            # since HTTPError inherits from URLError which inherits from
+            # IOError
+            pass
         except IOError, e:
             # URLError is a subclass of IOError
             raise errors.EC2DataRetrievalError, '[Errno %s] %s' % (e.errno, e.strerror)
-        except urllib2.HTTPError, results:
-            # fall through
-            pass
         if results.getcode() != 200:
             raise errors.EC2DataRetrievalError, '[%s] %s: %s' % (
                     results.getcode(), results.geturl(), results.msg)

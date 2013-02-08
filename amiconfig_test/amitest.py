@@ -16,22 +16,25 @@
 # limitations under the License.
 #
 
+import StringIO
 import testsuite
 # Bootstrap the testsuite
 testsuite.setup()
 
 import testbase
 from amiconfig import errors
+from urllib2 import HTTPError
 
 class AmiTest(testbase.TestCase):
     def testInstanceId(self):
         self.assertEquals(self.amicfg.id.getInstanceId(), 'i-decafbad')
 
     def testInstanceId_noec2(self):
-        self._data['meta-data/instance-id'] = IOError(113, "No route to host")
+        self._data['meta-data/instance-id'] = HTTPError("url",
+                113, "No route to host", None, fp=StringIO.StringIO())
         e = self.assertRaises(errors.EC2DataRetrievalError,
             self.amicfg.id.getInstanceId)
-        self.assertEquals(e.args, ('[Errno 113] No route to host', ))
+        self.assertEquals(e.args, ('[113] url: No route to host', ))
 
         self._data['meta-data/instance-id'] = testbase.FakeResponse('url',
                 'content', status=404, reason="Not found")
