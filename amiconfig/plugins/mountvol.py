@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 import os
-import subprocess
 
+from amiconfig.lib.mountdaemon import MountDaemon
 from amiconfig.plugin import AMIPlugin
 from conary.lib import util
 
@@ -35,4 +35,7 @@ class AMIConfigPlugin(AMIPlugin):
                 continue
             # ensure mount point exists
             util.mkdirChain(mount_point)
-            subprocess.call(["mount", device, mount_point])
+            #subprocess.call(["mount", device, mount_point])
+            mount_daemon = MountDaemon(
+                device, mount_point, wait=cfg.get('wait', 0))
+            mount_daemon.daemonize()

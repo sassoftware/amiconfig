@@ -24,6 +24,25 @@ testsuite.setup()
 
 import testbase
 
+from amiconfig.lib import mountdaemon
+
+
+PLUGIN_DATA_TEMPLATE = """
+[mount-vol]
+%s = %s
+wait = 10
+"""
+
+class MockDaemon(object):
+    _calls = []
+
+    @classmethod
+    def __init__(cls, *args, **kwargs):
+        cls._calls.append(('__init__', args, kwargs))
+
+    @classmethod
+    def daemonize(cls, *args, **kwargs):
+        cls._calls.append(('daemonize', args, kwargs))
 
 class PluginTest(testbase.BasePluginTest):
     pluginName = 'mountvol'
@@ -36,23 +55,18 @@ class PluginTest(testbase.BasePluginTest):
 
         self.mount1 = os.path.join(self.workDir,'install')
 
-        self.PluginData = """
-[mount-vol]
-%s = %s
-""" % (self.dev1, self.mount1)
+        self.PluginData = PLUGIN_DATA_TEMPLATE % (self.dev1, self.mount1)
 
-        self.calls = []
-        def mockCall(*args, **kwargs):
-            self.calls.append(('call', args, kwargs))
-
-        import subprocess
-        self.mock(subprocess, 'call', mockCall)
+        self.mock(mountdaemon, 'MountDaemon', MockDaemon)
 
     def testMount(self):
         """assert that configure() makes the right subprocess call and creates
         any needed directories
         """
-        self.assertEquals(self.calls, [
-            ('call', (["mount", self.dev1, self.mount1],), {}),
+        self.assertEquals(
+            MockDaemon._calls,
+            [
+                ('__init__', (self.dev1, self.mount1), {'wait': '10'}),
+                ('daemonize', (), {}),
             ])
         self.assertTrue(os.path.exists(self.mount1))
