@@ -46,10 +46,19 @@ class PluginTest(testbase.BasePluginTest):
         super(PluginTest, self).setUp()
 
     def tearDown(self):
-        os.unlink(self.dev1.name)
-        os.unlink(self.dev2.name)
-        os.rmdir(self.mount1)
-        os.rmdir(self.mount2)
+        if os.path.exists(self.dev1.name):
+            os.unlink(self.dev1.name)
+            self.dev1.close()
+
+        if os.path.exists(self.dev2.name):
+            os.unlink(self.dev2.name)
+            self.dev2.close()
+
+        if os.path.exists(self.mount1):
+            os.rmdir(self.mount1)
+
+        if os.path.exists(self.mount2):
+            os.rmdir(self.mount2)
 
     def setUpExtra(self):
         """Mock out subprocess module"""
