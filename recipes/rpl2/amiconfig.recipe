@@ -4,16 +4,20 @@
 # A copy is available at http://www.rpath.com/permanent/mit-license.html
 #
 
-class AMIConfig(BuildPackageRecipe):
+loadInstalled('python')
+class AMIConfig(BuildPackageRecipe, Python.VersionMixIn):
     name = 'amiconfig'
-    version = '0.6.0'
+    version = '0.4.4'
 
     buildRequires = [ 'dnspython:python',
-                      'initscripts:runtime' ]
+                      'initscripts:runtime',
+                      'python:devel' ]
 
     def setup(r):
+        r.setDefaultPython()
         r.addMercurialSnapshot('http://hg.rpath.com/amiconfig',
             tag='%(name)s-%(version)s')
-        r.Make()
-        r.MakeInstall()
+        makeArgs = 'PYTHON=/usr/bin/python%(pyver)s libdir=%(libdir)s'
+        r.Make(makeArgs)
+        r.MakeInstall(makeArgs)
         r.TagSpec('initscript', '%(initdir)s/.*')
