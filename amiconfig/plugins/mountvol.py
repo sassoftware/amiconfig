@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import os
-
 from amiconfig.lib.mountdaemon import MountDaemon
 from amiconfig.plugin import AMIPlugin
 from conary.lib import util
@@ -31,11 +29,10 @@ class AMIConfigPlugin(AMIPlugin):
             return None
 
         for device, mount_point in cfg.items():
-            if not device.startswith('/') or not os.path.exists(device):
+            if not device.startswith('/'):
                 continue
             # ensure mount point exists
             util.mkdirChain(mount_point)
-            #subprocess.call(["mount", device, mount_point])
             mount_daemon = MountDaemon(
                 device, mount_point, wait_count=cfg.get('wait_count', 0),
                 wait_time=cfg.get('wait_time', 60)
