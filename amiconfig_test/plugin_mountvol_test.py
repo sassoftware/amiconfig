@@ -17,6 +17,7 @@
 #
 
 import os
+import subprocess
 
 import testsuite
 # Bootstrap the testsuite
@@ -25,12 +26,14 @@ testsuite.setup()
 import testbase
 
 from amiconfig.lib import mountdaemon
+from amiconfig.lib.mountdaemon import MountDaemon
 
 
 PLUGIN_DATA_TEMPLATE = """
 [mount-vol]
 %s = %s
-wait = 10
+wait_count = 10
+wait_time = 1
 """
 
 class MockDaemon(object):
@@ -39,10 +42,18 @@ class MockDaemon(object):
     @classmethod
     def __init__(cls, *args, **kwargs):
         cls._calls.append(('__init__', args, kwargs))
+        cls.mount_daemon = MountDaemon(*args, **kwargs)
 
     @classmethod
     def daemonize(cls, *args, **kwargs):
         cls._calls.append(('daemonize', args, kwargs))
+        cls.start()
+
+    @classmethod
+    def start(cls, *args, **kwargs):
+        cls._calls.append(('start', args, kwargs))
+        cls.mount_daemon.start()
+
 
 class PluginTest(testbase.BasePluginTest):
     pluginName = 'mountvol'
@@ -50,23 +61,32 @@ class PluginTest(testbase.BasePluginTest):
 
     def setUpExtra(self):
         """Mock out subprocess module"""
-        self.dev1 = os.path.join(self.workDir, 'xvdj')
-        file(self.dev1, 'w')
+        self.dev = os.path.join(self.workDir, 'xvdj')
+        file(self.dev, 'w')
 
-        self.mount1 = os.path.join(self.workDir,'install')
+        self.mount = os.path.join(self.workDir,'install')
 
-        self.PluginData = PLUGIN_DATA_TEMPLATE % (self.dev1, self.mount1)
+        self.PluginData = PLUGIN_DATA_TEMPLATE % (self.dev, self.mount)
+
+        def mockSubprocessCall(*args, **kwargs):
+            MockDaemon._calls.append(('call', args, kwargs))
 
         self.mock(mountdaemon, 'MountDaemon', MockDaemon)
+        self.mock(subprocess, 'call', mockSubprocessCall)
+
+    def tearDown(self):
+        MockDaemon._calls = []
 
     def testMount(self):
-        """assert that configure() makes the right subprocess call and creates
-        any needed directories
+        """assert that MountDaemon is configured and called correctly
         """
         self.assertEquals(
             MockDaemon._calls,
             [
-                ('__init__', (self.dev1, self.mount1), {'wait': '10'}),
+                ('__init__', (self.dev, self.mount),
+                    {'wait_count': '10', 'wait_time': '1'}),
                 ('daemonize', (), {}),
+                ('start', (), {}),
+                ('call', (["mount", self.dev, self.mount],), {}),
             ])
-        self.assertTrue(os.path.exists(self.mount1))
+        self.assertTrue(os.path.exists(self.mount))

@@ -37,5 +37,7 @@ class AMIConfigPlugin(AMIPlugin):
             util.mkdirChain(mount_point)
             #subprocess.call(["mount", device, mount_point])
             mount_daemon = MountDaemon(
-                device, mount_point, wait=cfg.get('wait', 0))
+                device, mount_point, wait_count=cfg.get('wait_count', 0),
+                wait_time=cfg.get('wait_time', 60)
+                )
             mount_daemon.daemonize()

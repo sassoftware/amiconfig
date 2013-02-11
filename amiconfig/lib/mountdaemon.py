@@ -25,16 +25,17 @@ class MountDaemon(daemon.Daemon):
     """
     Attempt to mount a device in the background
     """
-    def __init__(self, device, mount_point, wait_time):
+    def __init__(self, device, mount_point, wait_count, wait_time=60):
         self.device = device
         self.mount_point = mount_point
-        self.wait_time = wait_time
+        self.wait_count = int(wait_count)
+        self.wait_time = int(wait_time)
 
     def start(self):
         count = 0
-        while count < self.wait_time:
+        while count < self.wait_count:
             if not os.path.exists(self.device):
-                time.sleep(60)
+                time.sleep(self.wait_time)
             else:
                 break
             count += 1
