@@ -28,3 +28,5 @@ class AmiconfigVmwareguest(RpathPackageRecipe, BuildPackageRecipe):
         r.rpathSetup()
         r.addMercurialSnapshot()
         r.MakeInstall("pybin=%(pybin)s")
+        # Sprinkle the magic flavor
+        if Arch.x86 or Arch.x86_64: pass
