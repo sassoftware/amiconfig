@@ -27,5 +27,5 @@ class AmiconfigVmwareguest(BuildPackageRecipe, RpathPackageRecipe):
     def setup(r):
         r.rpathSetup()
         r.addMercurialSnapshot()
-        r.MakeInstall()
+        r.MakeInstall("sitepkgs=%(sitepkgs)s")
 #        r.MakeInstall("pybin=%(pybin)s sitepkgs=%(sitepkgs)s")
