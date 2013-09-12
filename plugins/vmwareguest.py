@@ -14,9 +14,6 @@
 # limitations under the License.
 #
 
-
-import os
-from conary.lib import util
 from amiconfig.plugin import AMIPlugin
 from amiconfig import vmware_guest
 
@@ -25,5 +22,4 @@ class AMIConfigPlugin(AMIPlugin):
     _sectionName = 'vmware-guest'
 
     def configure(self):
-        import epdb; epdb.st()
         vmware_guest.Runner().run()
