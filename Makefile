@@ -16,9 +16,17 @@
 
 pybin = /usr/bin/python
 export sitepkgs := $(shell $(pybin) -c "from distutils import sysconfig; print sysconfig.get_python_lib(plat_specific=0, standard_lib=0)")
+conf_dir = /etc/amiconfig.d
 
 all:
 
-install:
+install: install-conf
 	$(MAKE) -C lib install
 	$(MAKE) -C plugins install
+
+install-conf: $(DESTDIR)$(conf_dir)
+	install -m 0644 plugin.conf $</vmwareguest.conf
+
+$(DESTDIR)$(conf_dir):
+	install -d -m 0755 $@
+
