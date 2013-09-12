@@ -1,3 +1,11 @@
+Changes in 0.6.1:
+  o The config parser has been extended to allow the 'plugins' and
+    'disabled_plugins' configuration options to be treated as lists. Subsequent
+    definitions in the 'amiconfig' section will append values to the list.
+    The list can be cleared by passing the value '[]'.
+  o In addition to '/etc/amiconfig.conf', we now support a directory of
+    configuration files, '/etc/amiconfig.d', processed in alphabetical order.
+
 Changes in 0.6.0:
   o Updated API to 2012-01-12
   o Added getInstanceIdentityDocument()

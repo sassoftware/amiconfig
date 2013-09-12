@@ -127,7 +127,7 @@ class AMIConfig(LoggedService):
         self._info('loading plugin %s' % plugin)
 
     def _getEnabledPlugins(self):
-        plugins = set(constants.DEFAULT_PLUGINS)
+        plugins = set()
         config = self.ud.getSection('amiconfig')
 
         # add plugins from user data

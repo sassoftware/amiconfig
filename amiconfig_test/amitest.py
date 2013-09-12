@@ -16,6 +16,7 @@
 #
 
 
+import os
 import StringIO
 import testsuite
 # Bootstrap the testsuite
@@ -41,3 +42,34 @@ class AmiTest(testbase.TestCase):
         e = self.assertRaises(errors.EC2DataRetrievalError,
             self.amicfg.id.getInstanceId)
         self.assertEquals(e.args, ('[404] url: Not found', ))
+
+    def testConfig(self):
+        from amiconfig import constants
+        self.configPath = os.path.join(self.workDir, 'amiconfig.conf')
+        self.configDPath = os.path.join(self.workDir, 'amiconfig.d')
+        self.mkdirs(self.configDPath)
+
+        self.amicfg.ud._cfgfn = self.configPath
+        self.amicfg.ud._cfgdir = self.configDPath
+
+        self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
+                ['disablesshpasswdauth', 'rootsshkeys'])
+
+        file(self.configPath, 'w').write('[amiconfig]\nplugins: blippy')
+        self.amicfg.ud._init()
+        self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
+                ['blippy', 'disablesshpasswdauth', 'rootsshkeys'])
+
+        # Disable one of the plugins, and add another one
+        file(os.path.join(self.configDPath, "blargh.conf"), 'w').write(
+                '[amiconfig]\nplugins: blargh\ndisabled_plugins: rootsshkeys')
+        self.amicfg.ud._init()
+        self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
+                ['blargh', 'blippy', 'disablesshpasswdauth'])
+        # Remove all default plugins
+        file(os.path.join(self.configDPath, "acme.conf"), 'w').write(
+                '[amiconfig]\nplugins: []')
+        self.amicfg.ud._init()
+        self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
+                ['blargh'])
+

@@ -25,3 +25,4 @@ PLUGIN_PATH = [ '@amiconfigdir@/plugins',
 DEFAULT_PLUGINS = [ 'rootsshkeys', 'disablesshpasswdauth', ]
 
 CONFIG_FILE = '/etc/amiconfig.conf'
+CONFIG_DIR = '/etc/amiconfig.d'
