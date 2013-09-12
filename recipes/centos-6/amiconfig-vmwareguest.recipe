@@ -16,7 +16,7 @@
 
 
 loadSuperClass('rpathpackage')
-class AmiconfigVmwareguest(BuildPackageRecipe, RpathPackageRecipe):
+class AmiconfigVmwareguest(RpathPackageRecipe, BuildPackageRecipe):
     name = 'amiconfig-vmwareguest'
     version = ''
 
