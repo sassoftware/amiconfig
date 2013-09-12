@@ -89,16 +89,16 @@ class FileTest(testcase.TestCaseWithWorkDir):
                     (('%s/home/plainuser1/.ssh' % self.rootDir, 101, 101), ()),
                     (('%s/root/.ssh' % self.rootDir, 0, 0), ()),
                     ])
-        self.assertEquals(_osfchown._mock.calls,
+        self.assertEquals([ x[0][1:] for x in _osfchown._mock.calls ],
                 [
-                    ((5, 101, 101), ()),
-                    ((5, 102, 102), ()),
-                    ((5, 0, 0), ()),
+                    (101, 101),
+                    (102, 102),
+                    (0, 0),
                     ])
 
-        self.assertEquals(_osfchmod._mock.calls,
+        self.assertEquals([ x[0][1:] for x in _osfchmod._mock.calls ],
                 [
-                    ((5, 384), ()),
-                    ((5, 384), ()),
-                    ((5, 384), ()),
+                    (384,),
+                    (384,),
+                    (384,),
                     ])
