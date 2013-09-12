@@ -61,7 +61,7 @@ class Runner(object):
 
         try:
             tree = ElementTree.fromstring(stdout)
-        except SyntaxError, e:
+        except SyntaxError:
             return 10
         section = tree.find("{%s}PropertySection" % self.NS_OVF_ENV)
         if section is None:
