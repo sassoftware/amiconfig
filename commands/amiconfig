@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/conary/bin/python2.6
 #
 # Copyright (c) SAS Institute Inc.
 #
@@ -17,6 +17,7 @@
 
 
 import logging
+import os
 import sys
 from optparse import OptionParser, Option
 
@@ -35,6 +36,16 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 if options.probe:
+    vmwarecmd = '/usr/bin/vmware-toolbox-cmd'
+    if os.path.exists(vmwarecmd):
+        import subprocess
+        PIPE = subprocess.PIPE
+        cmd = [ vmwarecmd, 'stat', 'sessionid' ]
+        p = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        if p.returncode == 0 and stdout.strip():
+            # Running in vmware
+            sys.exit(0)
     try:
         from amiconfig import metadataservice
     except ImportError, e:

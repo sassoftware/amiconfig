@@ -5,6 +5,8 @@ Changes in 0.6.1:
     The list can be cleared by passing the value '[]'.
   o In addition to '/etc/amiconfig.conf', we now support a directory of
     configuration files, '/etc/amiconfig.d', processed in alphabetical order.
+  o amiconfig can now run on vmware-enabled systems too. This permits us to
+    run non-AWS plugins too.
 
 Changes in 0.6.0:
   o Updated API to 2012-01-12
