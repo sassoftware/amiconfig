@@ -102,3 +102,11 @@ class FileTest(testcase.TestCaseWithWorkDir):
                     (384,),
                     (384,),
                     ])
+
+    def testUpdateOnBoot(self):
+        from conary.cmds import conarycmd
+        mock.mock(conarycmd, 'main')
+        r = self.Runner()
+        r.processProperties({'com.sas.app-engine.update-on-boot' : [ 'true' ]})
+        self.assertEquals(conarycmd.main._mock.calls,
+                [((['conary', 'updateall', '--no-interactive'],), ())])
