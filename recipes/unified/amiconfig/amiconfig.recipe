@@ -1,0 +1,45 @@
+#
+# Copyright (c) SAS Institute Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+class AMIConfig(BuildPackageRecipe):
+    name = 'amiconfig'
+    version = '0.6.0'
+
+    plat = 'centos'
+    platver = '6'
+
+    buildRequires = [ 'python-devel' ]
+
+    def setup(r):
+        r.macros.pyroot = r.macros.prefix
+        r.macros.pybin = '%(bindir)s/python%(pyver)s'
+        r.macros.sitepkgs = '%(libdir)s/python%(pyver)s/site-packages'
+        r.addMercurialSnapshot()
+
+        # Setup to use our python-conary package
+        r.Replace('^PYTHON =', '^PYTHON ?=', 'Make.rules')
+
+        r.Remove('amiconfig/lib/dnsupdate.py')
+        r.Make('libdir=%(libdir)s sitedir=%(sitepkgs)s'
+               ' initdir=%(initdir)s PYTHON=%(pybin)s')
+        r.MakeInstall('libdir=%(libdir)s sitedir=%(sitepkgs)s'
+                      ' initdir=%(initdir)s PYTHON=%(pybin)s')
+        r.TagSpec('initscript', '%(initdir)s/.*')
+
+        r.Replace(r'(.*chkconfig.*)10(.*)', r'\1 13\2', '%(initdir)s/amiconfig')
+
+        if Arch.x86 or Arch.x86_64: pass
