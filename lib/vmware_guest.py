@@ -105,6 +105,20 @@ class Runner(object):
         fobj.write("proxyMap * %s\n" % " ".join(
             'conarys://%s' % x for x in conaryProxies))
 
+    @ovfProperty('com.sas.app-engine.update-on-boot')
+    def updateAll(self, propKey, propValues):
+        # This method should run after setting the conary proxies; it
+        # just so happens that we sort properties alphabetically and
+        # 'c' comes before 'u'
+        if not propValues or not propValues[0]:
+            return
+        val = propValues[0]
+        if val.lower() != 'true':
+            return
+        from conary.cmds import conarycmd
+        conarycmd.main(['conary', 'updateall', '--no-interactive'])
+
+
     @ovfProperty('com.sas.app-engine.zone-addresses')
     def setManagementZoneAddresses(self, propKey, propValues):
         fobj = self._createFile('etc/conary/rpath-tools/config.d/directMethod')
