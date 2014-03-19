@@ -22,7 +22,7 @@ class AMIConfig(BuildPackageRecipe):
     plat = 'centos'
     platver = '6'
 
-    buildRequires = [ 'python-devel' ]
+    buildRequires = [ 'python-devel', 'initscripts' ]
 
     def setup(r):
         r.macros.pyroot = r.macros.prefix
