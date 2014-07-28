@@ -112,6 +112,12 @@ class FileTest(testcase.TestCaseWithWorkDir):
         self.assertEquals(conarycmd.main._mock.calls,
                 [((['conary', 'updateall', '--no-interactive'],), ())])
 
+    def testRun(self):
+        r = self.Runner()
+        r.__class__.executable = "/bin/echo"
+        ret = r.run()
+        self.assertEquals(ret, 10)
+
     def testWriteProperties(self):
         stream = tempfile.TemporaryFile()
         r = self.Runner()

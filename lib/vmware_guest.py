@@ -8,6 +8,7 @@ import pwd
 import re
 import subprocess
 import sys
+import tempfile
 
 def main():
     r = Runner()
@@ -57,8 +58,12 @@ class Runner(object):
 
         try:
             tree = ElementTree.parse(stream)
-        except SyntaxError:
-            return 10
+        except Exception, e:
+            # This really should be expat.error, but importing
+            # xml.parsers.expat seems wrong.
+            if str(e).startswith('syntax error'):
+                return 10
+            raise
         section = tree.find("{%s}PropertySection" % self.NS_OVF_ENV)
         if section is None:
             return 20
