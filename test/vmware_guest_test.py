@@ -1,6 +1,7 @@
 
 
 import os
+import tempfile
 
 import testsuite
 testsuite.setup()
@@ -110,3 +111,18 @@ class FileTest(testcase.TestCaseWithWorkDir):
         r.processProperties({'com.sas.app-engine.update-on-boot' : [ 'true' ]})
         self.assertEquals(conarycmd.main._mock.calls,
                 [((['conary', 'updateall', '--no-interactive'],), ())])
+
+    def testWriteProperties(self):
+        stream = tempfile.TemporaryFile()
+        r = self.Runner()
+        r.__class__.executable = "adfadfadf"
+        retcode, stderr = r.writeProperties(stream)
+        self.assertEquals(retcode, 1)
+        self.assertEquals(stderr, None)
+
+        r.__class__.executable = "/bin/echo"
+        retcode, stderr = r.writeProperties(stream)
+        self.assertEquals(retcode, 0)
+        self.assertEquals(stderr, None)
+        stream.seek(0)
+        self.assertEquals(stream.read(), "info-get guestinfo.ovfEnv\n")

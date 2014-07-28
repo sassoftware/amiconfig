@@ -2,6 +2,7 @@
 from xml.etree import ElementTree
 import errno
 import fnmatch
+import io
 import os
 import pwd
 import re
@@ -48,19 +49,14 @@ class Runner(object):
     rootDir = '/'
 
     def run(self):
-        if not os.path.exists(self.executable):
-            return 1
-        cmd = [ self.executable, 'info-get guestinfo.ovfEnv' ]
-        PIPE = subprocess.PIPE
-        p = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate()
-        if p.returncode:
-            return p.returncode
-        if stderr:
-            return 100
+        stream = tempfile.TemporaryFile()
+        retcode, stderr = self.writeProperties(stream)
+        if retcode != 0:
+            return retcode
+        stream.seek(0)
 
         try:
-            tree = ElementTree.fromstring(stdout)
+            tree = ElementTree.parse(stream)
         except SyntaxError:
             return 10
         section = tree.find("{%s}PropertySection" % self.NS_OVF_ENV)
@@ -76,6 +72,20 @@ class Runner(object):
         self.processProperties(properties)
 
         return 0
+
+    @classmethod
+    def writeProperties(cls, stream):
+        if not os.path.exists(cls.executable):
+            return 1, None
+        cmd = [ cls.executable, 'info-get guestinfo.ovfEnv' ]
+        p = subprocess.Popen(cmd, stdout=stream,
+                stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        if p.returncode:
+            return p.returncode, stderr
+        if stderr:
+            return 100, stderr
+        return 0, None
 
     def processProperties(self, properties):
         for k, method in sorted(Registry._propMap.items()):
