@@ -73,3 +73,11 @@ class AmiTest(testbase.TestCase):
         self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
                 ['blargh'])
 
+    def testWriteProperties(self):
+        self._data['user-data'] = "Whee!"
+        destDir = os.path.join(self.workDir, "ami")
+        self.amicfg.id.writeProperties(destDir)
+        self.assertEqual(file(os.path.join(destDir, "user-data")).read(),
+                "Whee!")
+        self.assertEqual(file(os.path.join(destDir, "meta-data/instance-id")).read(),
+                "i-decafbad")

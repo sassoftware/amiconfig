@@ -15,6 +15,7 @@
 #
 
 
+import os
 import urllib2
 
 from amiconfig import metadataservice
@@ -69,6 +70,17 @@ class InstanceData(metadataservice.MetadataService):
             if 'server' in results.headers:
                 raise errors.EC2DataRetrievalError, '%s' % results.read()
         return results
+
+    def writeProperties(self, directory):
+        # Write the major properties
+        for mdPath in [ 'user-data', 'meta-data/instance-id', ]:
+            destPath = os.path.join(directory, mdPath)
+            try:
+                os.makedirs(os.path.dirname(destPath))
+            except OSError, e:
+                if e.errno != 17:
+                    raise
+            file(destPath, "w").write(self.read(mdPath))
 
     def read(self, path):
         return self.open(path).read()
