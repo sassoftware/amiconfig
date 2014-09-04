@@ -74,13 +74,17 @@ class InstanceData(metadataservice.MetadataService):
     def writeProperties(self, directory):
         # Write the major properties
         for mdPath in [ 'user-data', 'meta-data/instance-id', ]:
+            try:
+                data = self.read(mdPath)
+            except errors.EC2DataRetrievalError:
+                continue
             destPath = os.path.join(directory, mdPath)
             try:
                 os.makedirs(os.path.dirname(destPath))
             except OSError, e:
                 if e.errno != 17:
                     raise
-            file(destPath, "w").write(self.read(mdPath))
+            file(destPath, "w").write(data)
 
     def read(self, path):
         return self.open(path).read()
