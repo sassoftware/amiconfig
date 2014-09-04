@@ -71,9 +71,29 @@ class InstanceData(metadataservice.MetadataService):
                 raise errors.EC2DataRetrievalError, '%s' % results.read()
         return results
 
+    # Whole list of properties here:
+    # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AESDG-chapter-instancedata.html
     def writeProperties(self, directory):
+        props = [ 'user-data',
+                'meta-data/ami-id',
+                'meta-data/ami-launch-index',
+                'meta-data/ami-manifest-path',
+                'meta-data/hostname',
+                'meta-data/instance-id',
+                'meta-data/instance-type',
+                'meta-data/kernel-id',
+                'meta-data/local-hostname',
+                'meta-data/local-ipv4',
+                'meta-data/placement/availability-zone',
+                'meta-data/profile',
+                'meta-data/public-hostname',
+                'meta-data/public-ipv4',
+                'meta-data/public-keys/0/openssh-key',
+                'meta-data/reservation-id',
+                'meta-data/security-groups',
+                ]
         # Write the major properties
-        for mdPath in [ 'user-data', 'meta-data/instance-id', ]:
+        for mdPath in props:
             try:
                 data = self.read(mdPath)
             except errors.EC2DataRetrievalError:
