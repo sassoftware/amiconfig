@@ -74,10 +74,25 @@ class AmiTest(testbase.TestCase):
                 ['blargh'])
 
     def testWriteProperties(self):
-        self._data['user-data'] = "Whee!"
+        self._data.update({
+            'user-data' : "Whee!",
+            'meta-data/ami-id' : "ami-decafbad",
+            'meta-data/ami-launch-index' : 1,
+            'meta-data/ami-manifest-path' : '/aaa',
+            'meta-data/hostname' : 'remotehost',
+            'meta-data/instance-type' : 's3',
+            'meta-data/kernel-id' : 'aki-decafbad',
+            'meta-data/local-hostname' : 'local-hostname',
+            'meta-data/local-ipv4' : '10.2.3.4',
+            'meta-data/placement/availability-zone' : 'ec2.east',
+            'meta-data/profile' : 'slim',
+            'meta-data/public-hostname' : 'public-hostname',
+            'meta-data/public-ipv4' : '1.2.3.4',
+            'meta-data/public-keys/0/openssh-key' : 'ssh-key blah',
+            'meta-data/reservation-id' : 'r-decafbad',
+            'meta-data/security-groups' : 'secgroup1 secgroup2',
+            })
         destDir = os.path.join(self.workDir, "ami")
         self.amicfg.id.writeProperties(destDir)
-        self.assertEqual(file(os.path.join(destDir, "user-data")).read(),
-                "Whee!")
-        self.assertEqual(file(os.path.join(destDir, "meta-data/instance-id")).read(),
-                "i-decafbad")
+        for k, v in self._data.items():
+            self.assertEqual(file(os.path.join(destDir, k)).read(), str(v))
