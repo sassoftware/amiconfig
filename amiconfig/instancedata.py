@@ -85,6 +85,7 @@ class InstanceData(metadataservice.MetadataService):
                 'meta-data/local-hostname',
                 'meta-data/local-ipv4',
                 'meta-data/placement/availability-zone',
+                'meta-data/product-codes',
                 'meta-data/profile',
                 'meta-data/public-hostname',
                 'meta-data/public-ipv4',
