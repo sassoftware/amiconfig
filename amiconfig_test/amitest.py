@@ -85,6 +85,7 @@ class AmiTest(testbase.TestCase):
             'meta-data/local-hostname' : 'local-hostname',
             'meta-data/local-ipv4' : '10.2.3.4',
             'meta-data/placement/availability-zone' : 'ec2.east',
+            'meta-data/product-codes' : 'foobar',
             'meta-data/profile' : 'slim',
             'meta-data/public-hostname' : 'public-hostname',
             'meta-data/public-ipv4' : '1.2.3.4',
