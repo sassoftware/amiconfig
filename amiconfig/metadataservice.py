@@ -45,6 +45,31 @@ class MetadataService(LoggedService):
     API_VERSION = '2012-01-12'
     SERVICE_IP = '169.254.169.254'
 
+    def __init__(self):
+        super(MetadataService, self).__init__()
+        self._negotiateApiVersion()
+
+    def _negotiateApiVersion(self):
+        """
+        OpenStack doesn't support the API version that we want to use, so we
+        need to fallback to the supported API version if 2012-01-12 isn't
+        available.
+        """
+
+        url = 'http://%s' % self.SERVICE_IP
+
+        try:
+            versions = self._open(url, formatUrl=False).read().split('\n')
+        except Exception, e:
+            self.log.debug("While opening %s: %s" % (url, e))
+            return
+
+        if self.API_VERSION in versions:
+            return
+
+        # Use the version supported by open stack
+        self.API_VERSION = '2009-04-04'
+
     def canConnect(self):
         url = "http://%s/%s" % (self.SERVICE_IP, self.API_VERSION)
         try:
@@ -57,8 +82,11 @@ class MetadataService(LoggedService):
             self.log.debug("While opening %s: %s" % (url, e))
         return False
 
-    def _open(self, path):
-        url = self._makeUrl(path)
+    def _open(self, path, formatUrl=True):
+        if formatUrl:
+            url = self._makeUrl(path)
+        else:
+            url = path
         self.log.debug("Opening %s", url)
         dt = socket.getdefaulttimeout()
         try:

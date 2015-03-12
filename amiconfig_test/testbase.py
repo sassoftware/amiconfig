@@ -51,9 +51,12 @@ class FakeResponse(object):
 
 class AMIConfig(ami.AMIConfig):
     class InstanceDataFactory(ami.InstanceData):
-        DATA = None
+        DATA = {
+            'http://169.254.169.254':
+                '1.0\n2007-12-15\n2008-09-01\n2009-04-04\nlatest',
+        }
 
-        def _open(self, path):
+        def _open(self, path, formatUrl=True):
             data = self.DATA.get(path)
             if data is None:
                 raise Exception("Mock me: %s" % path)
@@ -86,6 +89,8 @@ class TestCase(testcase.TestCaseWithWorkDir):
     DATA = {
         'user-data' : '',
         'meta-data/instance-id' : 'i-decafbad',
+        'http://169.254.169.254':
+            '1.0\n2007-12-15\n2008-09-01\n2009-04-04\nlatest',
     }
 
     # Override if you want specific responses tested

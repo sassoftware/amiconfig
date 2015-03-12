@@ -96,4 +96,6 @@ class AmiTest(testbase.TestCase):
         destDir = os.path.join(self.workDir, "ami")
         self.amicfg.id.writeProperties(destDir)
         for k, v in self._data.items():
+            if k.startswith('http://'):
+                continue
             self.assertEqual(file(os.path.join(destDir, k)).read(), str(v))
