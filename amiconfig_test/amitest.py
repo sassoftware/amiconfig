@@ -25,6 +25,7 @@ testsuite.setup()
 import testbase
 from amiconfig import errors
 from urllib2 import HTTPError
+from testutils import mock
 
 class AmiTest(testbase.TestCase):
     def testInstanceId(self):
@@ -72,6 +73,23 @@ class AmiTest(testbase.TestCase):
         self.amicfg.ud._init()
         self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
                 ['blargh'])
+
+    def testCanConnect(self):
+        mock.mockMethod(self.amicfg.id._open)
+        _handle = mock.MockObject()
+        self.amicfg.id._open._mock.setReturn(_handle, None)
+
+        _handle.read._mock.setReturn("meta-data/")
+        self.assertTrue(self.amicfg.id.canConnect())
+
+        _handle.read._mock.setReturn("user-data/")
+        self.assertTrue(self.amicfg.id.canConnect())
+
+        _handle.read._mock.setReturn("user-data/\nmeta-data/")
+        self.assertTrue(self.amicfg.id.canConnect())
+
+        _handle.read._mock.setReturn("other-data/")
+        self.assertFalse(self.amicfg.id.canConnect())
 
     def testWriteProperties(self):
         self._data.update({

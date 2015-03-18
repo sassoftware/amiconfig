@@ -75,7 +75,7 @@ class MetadataService(LoggedService):
         try:
             handle = self._open(None)
             ec2_index = handle.read()
-            if ("user-data" in ec2_index) and ("meta-data" in ec2_index):
+            if ("user-data" in ec2_index) or ("meta-data" in ec2_index):
                 return True
             self.log.debug("Didn't find proper ec2 index at %s" % url)
         except Exception, e:
@@ -95,8 +95,7 @@ class MetadataService(LoggedService):
         finally:
             socket.setdefaulttimeout(dt)
 
-    @classmethod
-    def _makeUrl(cls, path):
-        urlComps = [ "http://%s" % cls.SERVICE_IP, cls.API_VERSION, path ]
+    def _makeUrl(self, path):
+        urlComps = [ "http://%s" % self.SERVICE_IP, self.API_VERSION, path ]
         # If path is empty or None or /, stop at API_VERSION
         return '/'.join(x.strip('/') for x in urlComps if (x and x.strip('/')))
