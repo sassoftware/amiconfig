@@ -54,19 +54,19 @@ class AmiTest(testbase.TestCase):
         self.amicfg.ud._cfgdir = self.configDPath
 
         self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
-                ['disablesshpasswdauth', 'rootsshkeys'])
+                ['disablesshpasswdauth', 'rootsshkeys', 'vmwareguest'])
 
         file(self.configPath, 'w').write('[amiconfig]\nplugins: blippy')
         self.amicfg.ud._init()
         self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
-                ['blippy', 'disablesshpasswdauth', 'rootsshkeys'])
+                ['blippy', 'disablesshpasswdauth', 'rootsshkeys', 'vmwareguest'])
 
         # Disable one of the plugins, and add another one
         file(os.path.join(self.configDPath, "blargh.conf"), 'w').write(
                 '[amiconfig]\nplugins: blargh\ndisabled_plugins: rootsshkeys')
         self.amicfg.ud._init()
         self.assertEquals(sorted(self.amicfg._getEnabledPlugins()),
-                ['blargh', 'blippy', 'disablesshpasswdauth'])
+                ['blargh', 'blippy', 'disablesshpasswdauth', 'vmwareguest'])
         # Remove all default plugins
         file(os.path.join(self.configDPath, "acme.conf"), 'w').write(
                 '[amiconfig]\nplugins: []')

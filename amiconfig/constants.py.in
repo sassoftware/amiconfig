@@ -22,7 +22,7 @@ PLUGIN_PATH = [ '@amiconfigdir@/plugins',
 
 # List of plugins to always load and run. You can't turn these off, be careful
 # about adding more.
-DEFAULT_PLUGINS = [ 'rootsshkeys', 'disablesshpasswdauth', ]
+DEFAULT_PLUGINS = [ 'rootsshkeys', 'disablesshpasswdauth', 'vmwareguest' ]
 
 CONFIG_FILE = '/etc/amiconfig.conf'
 CONFIG_DIR = '/etc/amiconfig.d'

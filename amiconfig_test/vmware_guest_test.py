@@ -9,7 +9,7 @@ from testrunner import testcase
 
 from testutils import mock
 
-import vmware_guest
+from amiconfig import vmware_guest
 
 class FileTest(testcase.TestCaseWithWorkDir):
     def setUp(self):
