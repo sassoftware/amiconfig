@@ -27,7 +27,8 @@ python_files = \
 	instancedata.py \
 	metadataservice.py \
 	plugin.py \
-	userdata.py
+	userdata.py \
+	vmware_guest.py
 
 extra_files = \
 	Makefile \
