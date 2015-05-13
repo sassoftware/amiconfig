@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+
 from amiconfig.plugin import AMIPlugin
 from amiconfig import vmware_guest
 
