@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-
 all: subdirs
 
 export VERSION = 0.6.1
